@@ -1,0 +1,87 @@
+{
+  "target_prompt": "ALIGN THE PROJECT/01-split-this-prompt.md",
+  "decomposed_by": "META-SPLIT-PROMPT",
+  "created": "2026-03-06T00:00:00Z",
+  "last_updated": "2026-03-06T13:05:00Z",
+  "overall_status": "complete",
+  "prompts": {
+    "01": {
+      "label": "initialize-state",
+      "status": "complete",
+      "parallel_group": null,
+      "depends_on": [],
+      "unblocks": ["02", "03"],
+      "input_files": [],
+      "output_files": [
+        "split-prompts/01-split-this-prompt/state.json",
+        "split-prompts/01-split-this-prompt/README.md"
+      ],
+      "started_at": null,
+      "completed_at": "2026-03-06T12:00:00Z",
+      "notes": ""
+    },
+    "02": {
+      "label": "extract-questions",
+      "status": "complete",
+      "parallel_group": "A",
+      "depends_on": ["01"],
+      "unblocks": ["99"],
+      "input_files": [
+        "CLAUDE.md",
+        "knowledge/personnel-registry.md",
+        "knowledge/zone-definitions.md",
+        "knowledge/vehicle-statuses-and-transitions.md",
+        "knowledge/lot-placement-rules.md",
+        "knowledge/signage-and-tagging-standards.md",
+        "knowledge/key-cafe-protocol.md",
+        "knowledge/compliance-requirements.md",
+        "knowledge/financial-penalties.md",
+        "knowledge/daily-operations-workflow.md",
+        "knowledge/communication-and-escalation-protocols.md",
+        "knowledge/service-department-utilization.md",
+        "knowledge/external-vendors.md",
+        "knowledge/_PHASE_1_REPORT.md"
+      ],
+      "output_files": [
+        "split-prompts/01-split-this-prompt/questions.json"
+      ],
+      "started_at": "2026-03-06T12:01:00Z",
+      "completed_at": "2026-03-06T12:30:00Z",
+      "notes": "46 question objects extracted. NEEDS_INPUT=28, AMBIGUOUS=13, VERIFY=4, ASSUMPTION=0, NEEDS_REVIEW=0."
+    },
+    "03": {
+      "label": "build-html-shell",
+      "status": "complete",
+      "parallel_group": "A",
+      "depends_on": ["01"],
+      "unblocks": ["99"],
+      "input_files": [
+        "CLAUDE.md",
+        "ALIGN THE PROJECT/01-split-this-prompt.md"
+      ],
+      "output_files": [
+        "knowledge-audit.html"
+      ],
+      "started_at": "2026-03-06T12:10:00Z",
+      "completed_at": "2026-03-06T12:15:00Z",
+      "notes": "Builds complete HTML+CSS+JS shell with const QUESTIONS = []; placeholder. Does NOT read knowledge files."
+    },
+    "99": {
+      "label": "inject-questions-and-finalize",
+      "status": "complete",
+      "parallel_group": null,
+      "depends_on": ["02", "03"],
+      "unblocks": [],
+      "input_files": [
+        "split-prompts/01-split-this-prompt/questions.json",
+        "knowledge-audit.html"
+      ],
+      "output_files": [
+        "knowledge-audit.html"
+      ],
+      "started_at": "2026-03-06T13:00:00Z",
+      "completed_at": "2026-03-06T13:05:00Z",
+      "notes": "Uses Edit tool to replace const QUESTIONS = []; with the full array from questions.json. Final output is the complete knowledge-audit.html."
+    }
+  }
+}

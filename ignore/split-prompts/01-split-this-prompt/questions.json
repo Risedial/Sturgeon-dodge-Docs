@@ -1,0 +1,654 @@
+[
+  {
+    "id": "Q001",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/personnel-registry.md",
+    "section": "## Overview",
+    "question": "What is the correct given name of the Admin — Stock Tags employee?",
+    "context": "All downstream SOPs, checklists, and training materials use this name — an incorrect name on official documents creates confusion and may not match employee records.",
+    "currentValue": "Jorja (per CLAUDE.md) / Georgia (per source walkthrough transcript)",
+    "options": ["Jorja", "Georgia"]
+  },
+  {
+    "id": "Q002",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/personnel-registry.md",
+    "section": "## Management / Leadership Team",
+    "question": "What is Scott's official role title at the Edmonton Office?",
+    "context": "SOPs reference this role throughout for vehicle placement oversight and lot organization — an incorrect title creates confusion in team-facing documents.",
+    "currentValue": "Scott [AMBIGUOUS — role title uncertain]; listed as Lot Manager / Operations Manager",
+    "options": ["Lot Manager", "Operations Manager", "Lot Manager / Operations Manager (dual title)"]
+  },
+  {
+    "id": "Q003",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/personnel-registry.md",
+    "section": "## Management / Leadership Team",
+    "question": "Are Don and Alex two separate people sharing the Lot Policing manager role, or is this one person?",
+    "context": "Personnel registry and all communication SOPs must accurately reflect whether this is one role held by one person or shared by two — this affects task routing and escalation chains.",
+    "currentValue": "Don [AMBIGUOUS] / Alex [AMBIGUOUS] — listed together for Manager — Lot Policing / Staff Vehicles",
+    "options": [
+      "Two separate people (Don and Alex both hold this role)",
+      "One person — Don (Alex refers to a different role or context)",
+      "One person — Alex (Don refers to a different role or context)"
+    ]
+  },
+  {
+    "id": "Q004",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/personnel-registry.md",
+    "section": "## Service Department",
+    "question": "Are Service Department Lead Andy and Technician Andy the same person, or two different people?",
+    "context": "Service department headcount, PDI routing, and the 9-staff count all depend on whether this is one person in a dual role or two separate employees.",
+    "currentValue": "Two entries for 'Andy' — one as Service Department Lead, one as Technician [AMBIGUOUS]",
+    "options": [
+      "Same person — Andy is Service Lead and also performs technician work",
+      "Two different people — both named Andy, holding different roles"
+    ]
+  },
+  {
+    "id": "Q005",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/personnel-registry.md",
+    "section": "## Service Department",
+    "question": "What is Larry's specific role or function in the service department?",
+    "context": "Task routing in service department SOPs assigns work by role — a generic 'Service Staff' label prevents accurate work assignment in decision trees.",
+    "currentValue": "Larry [AMBIGUOUS] — listed only as 'Service Staff' with Internal service work; no further detail",
+    "options": [
+      "Technician — performs PDI and mechanical work",
+      "Service Advisor — handles customer and internal intake",
+      "Shop Assistant — performs support tasks under the Shop Foreman",
+      "Service Staff is sufficient — no further role distinction needed"
+    ]
+  },
+  {
+    "id": "Q006",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/personnel-registry.md",
+    "section": "## Other Personnel Referenced in Source Material",
+    "question": "Do vehicles purchased by Chris H. follow the standard arrival/PDI/detail process, or a modified one?",
+    "context": "Vehicle arrival decision trees must account for this edge case — if Chris H.'s acquisitions bypass standard steps, those vehicles could arrive without PDI or proper processing.",
+    "currentValue": "None — no value recorded; source references 'Chris H. works with Max/DHD' but process is unspecified",
+    "options": [
+      "Standard process — all vehicles go through normal PDI, detail, and placement",
+      "Modified process — some steps are pre-completed before the vehicle arrives",
+      "Completely separate process — handled outside the standard lot workflow"
+    ]
+  },
+  {
+    "id": "Q007",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/zone-definitions.md",
+    "section": "## Zone 5: Power Sport / Quad Corner",
+    "question": "How many vehicles can fit in the Power Sport / Quad Corner zone?",
+    "context": "The morning lot walk checklist and zone capacity monitoring require a defined slot count for every zone — an undefined count prevents capacity tracking.",
+    "currentValue": "[NEEDS_INPUT — exact count not specified in source material]",
+    "options": [
+      "1–2 vehicles (very limited dead-space area)",
+      "3–5 vehicles",
+      "6–10 vehicles (larger seasonal staging area)"
+    ]
+  },
+  {
+    "id": "Q008",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/zone-definitions.md",
+    "section": "## Zone 6: Auction Area",
+    "question": "How many vehicles can fit in the Auction Area zone?",
+    "context": "Zone capacity definitions are required by the morning lot walk checklist and overflow routing rules — an undefined count leaves this zone without a fill-or-overflow trigger.",
+    "currentValue": "[NEEDS_INPUT — exact count not specified in source material]",
+    "options": [
+      "1–3 vehicles",
+      "4–6 vehicles",
+      "7–10 vehicles",
+      "More than 10 vehicles (large staging area)"
+    ]
+  },
+  {
+    "id": "Q009",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/vehicle-statuses-and-transitions.md",
+    "section": "## State Definitions Table",
+    "question": "What is the exact Airtable status string used while a vehicle's PDI is actively in progress?",
+    "context": "Decision trees for PDI routing and vehicle status tracking reference the exact Airtable field value — an incorrect label means the system check in the tree will produce wrong results.",
+    "currentValue": "[NEEDS_INPUT — exact Airtable label for in-progress PDI not specified in source]",
+    "options": [
+      "PDI IN PROGRESS",
+      "IN PDI",
+      "PENDING PDI (same label used from arrival through completion)",
+      "IN RECON (used temporarily until PDI is marked complete)"
+    ]
+  },
+  {
+    "id": "Q010",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/vehicle-statuses-and-transitions.md",
+    "section": "## State Definitions Table",
+    "question": "What is the exact Airtable status string for a vehicle arriving as a dealer trade, before PDI?",
+    "context": "The dealer trade arrival decision tree requires this Airtable status value to correctly identify and route dealer trades through the system.",
+    "currentValue": "[NEEDS_INPUT — exact Airtable status label for Dealer Trade Incoming not specified in source]",
+    "options": [
+      "DEALER TRADE",
+      "INCOMING",
+      "IN TRANSIT",
+      "AVAILABLE (applied immediately on arrival, same as standard new vehicle)"
+    ]
+  },
+  {
+    "id": "Q011",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/vehicle-statuses-and-transitions.md",
+    "section": "## State Definitions Table",
+    "question": "What is the exact Airtable status string used when a vehicle has been routed to auction?",
+    "context": "The auction routing decision tree and morning lot walk checklist must reference the exact Airtable value to correctly identify auction-bound vehicles during zone verification.",
+    "currentValue": "[NEEDS_INPUT — exact Airtable status label for Auction Bound not specified in source]",
+    "options": [
+      "AUCTION",
+      "AUCTION BOUND",
+      "WHOLESALE (auction-bound vehicles share this status with other wholesale)",
+      "WHOLESALE | SOLD (already captured under the SOLD placement category)"
+    ]
+  },
+  {
+    "id": "Q012",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/lot-placement-rules.md",
+    "section": "## Step 4: Cage Slot-Level Rules",
+    "question": "At what point does the ALL_TRUCK_OVERRIDE apply to prevent a solid row of trucks in slots C04–C07?",
+    "context": "Lot attendants placing vehicles in C04–C07 need a clear numeric threshold — without it, the override rule cannot be applied consistently and 'use judgment' fills the gap.",
+    "currentValue": "[NEEDS_INPUT — exact truck count that triggers the override is not specified in source]",
+    "options": [
+      "3 or more trucks in C04–C07 triggers the override",
+      "All 4 slots filled with trucks triggers the override",
+      "Override applies if trucks would fill 5 or more consecutive Cage slots total"
+    ]
+  },
+  {
+    "id": "Q013",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/lot-placement-rules.md",
+    "section": "## Step 2: Vehicle Categorization",
+    "question": "What is the correct process when a new vehicle arrives but has no VIN recorded in Airtable?",
+    "context": "The vehicle arrival decision tree must define this case — without a VIN, the standard Airtable lookup cannot be completed and the attendant has no defined next step.",
+    "currentValue": "None — no value recorded; placement system excludes vehicles without VIN; human process unspecified",
+    "options": [
+      "Hold vehicle in Overflow (Temporary) until VIN is entered in Airtable",
+      "Contact Admin (Jorja/Giselle) to create the Airtable record manually",
+      "Route directly to Lot Manager for manual verification before any placement"
+    ]
+  },
+  {
+    "id": "Q014",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/signage-and-tagging-standards.md",
+    "section": "## 1. Stock-In Tags",
+    "question": "What specific information fields are filled in on a stock-in tag when a vehicle arrives?",
+    "context": "The stock-in tag creation checklist must list every required field — without knowing the exact fields, the checklist cannot be written and the tag process cannot be audited.",
+    "currentValue": "White tag placed bottom-right corner of windshield; content fields not specified [AMBIGUOUS]",
+    "options": [
+      "VIN + Stock Number + Date of Arrival",
+      "VIN + Stock Number + Date + Vehicle Status",
+      "Stock Number + Make/Model + Date + Salesperson",
+      "VIN + Stock Number + Date + Airtable Status + Notes field"
+    ]
+  },
+  {
+    "id": "Q015",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/signage-and-tagging-standards.md",
+    "section": "## 3. Trade-In Banners",
+    "question": "What does the trade-in banner look like, and what information does it display?",
+    "context": "Lot attendants must know what they are placing on a trade-in vehicle — an undescribed banner cannot be identified or verified during the morning lot walk.",
+    "currentValue": "Banner exists and distinguishes trade-ins from inventory; physical appearance and content not described [AMBIGUOUS]",
+    "options": [
+      "Printed banner reading 'TRADE IN' only — no additional content",
+      "Printed banner reading 'TRADE IN' with space for vehicle info and date",
+      "Handwritten sign created using sold sign supplies from upstairs"
+    ]
+  },
+  {
+    "id": "Q016",
+    "category": "VERIFY",
+    "file": "knowledge/signage-and-tagging-standards.md",
+    "section": "## 3. Trade-In Banners",
+    "question": "Are trade-in banners stored upstairs, in the same location as sold signs and Sharpies?",
+    "context": "Lot attendants must know where to retrieve trade-in banners immediately when a trade-in arrives — an incorrect location causes delay in applying required signage.",
+    "currentValue": "Sold signs and Sharpies confirmed upstairs; trade-in banner location not explicitly confirmed [VERIFY]",
+    "options": [
+      "Yes — trade-in banners are stored upstairs with the sold signs",
+      "No — trade-in banners are stored in a different location (to be specified)"
+    ]
+  },
+  {
+    "id": "Q017",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/key-cafe-protocol.md",
+    "section": "## 7. Financial Penalties",
+    "question": "What is the full replacement cost range for vehicle key sets at this dealership?",
+    "context": "The financial penalties SOP states the lost-key penalty as 'approximately 50% of replacement cost' — a specific dollar range is needed to write a binding penalty schedule.",
+    "currentValue": "~50% of full replacement cost; exact replacement cost not specified [NEEDS_INPUT]",
+    "options": [
+      "$100–$300 full replacement cost (penalty: $50–$150)",
+      "$300–$600 full replacement cost (penalty: $150–$300)",
+      "$600–$1,000 full replacement cost (penalty: $300–$500)",
+      "Varies by vehicle model — no single figure applies across all inventory"
+    ]
+  },
+  {
+    "id": "Q018",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/key-cafe-protocol.md",
+    "section": "## 5. Accountability Agreement",
+    "question": "Where is the Accountability Agreement stored, and which role collects signed copies from employees?",
+    "context": "New employee onboarding SOPs must specify where to find the agreement and who to submit the signed copy to — without this, the onboarding step cannot be executed.",
+    "currentValue": "None — no value recorded; document confirmed to exist; location and administrator not specified",
+    "options": [
+      "Kept and administered by Sales Manager (Kevin)",
+      "Kept and administered by Admin — Stock Tags (Jorja) or Admin/Tech (Giselle)",
+      "Kept and administered by Owner / General Manager",
+      "Kept and administered by Shop Foreman (Tracy)"
+    ]
+  },
+  {
+    "id": "Q019",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/key-cafe-protocol.md",
+    "section": "## 1. Key Cafe — The Single Source of Truth",
+    "question": "Where is Key Cafe physically located at the Edmonton Office?",
+    "context": "Every SOP step involving key or plate sign-out must tell the employee where to go — without a physical location, the protocol cannot be executed.",
+    "currentValue": "None — no value recorded; Key Cafe confirmed to exist; physical location not specified",
+    "options": [
+      "At the main reception or admin desk inside the building",
+      "In the service department area",
+      "Near the lot entrance or exit",
+      "In a dedicated key room upstairs"
+    ]
+  },
+  {
+    "id": "Q020",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 1. Stellantis PDI Compliance — Manufacturer Requirement",
+    "question": "What are the exact Stellantis fine amounts for PDI non-compliance when below the penalty threshold?",
+    "context": "The financial impact analysis and management SOP must state actual fine exposure — without specific amounts, the urgency of maintaining compliance cannot be quantified.",
+    "currentValue": "[NEEDS_INPUT — source states 'fines and docking begin' at red zone but does not give dollar amounts]",
+    "options": [
+      "$500–$2,000 per non-compliant vehicle",
+      "$2,000–$5,000 per non-compliant vehicle",
+      "Flat monthly fine applied to the dealership (not per-vehicle)",
+      "Structured as reduction in manufacturer bonuses and incentive payments"
+    ]
+  },
+  {
+    "id": "Q021",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 1. Stellantis PDI Compliance — Manufacturer Requirement",
+    "question": "What specifically does Stellantis 'docking' mean — what is reduced or withheld from the dealership?",
+    "context": "Management SOPs must explain the full financial consequence of non-compliance to motivate adherence — 'docking' is referenced throughout but never defined.",
+    "currentValue": "[NEEDS_INPUT — docking mechanism not specified in source material]",
+    "options": [
+      "Reduction in vehicle allocation (fewer units available to order)",
+      "Withholding of manufacturer bonus and incentive payments",
+      "Both allocation reduction and bonus withholding apply simultaneously",
+      "Reduction in warranty reimbursement rates"
+    ]
+  },
+  {
+    "id": "Q022",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 1. Stellantis PDI Compliance — Manufacturer Requirement",
+    "question": "What is the exact Stellantis PDI compliance percentage at which fines and docking formally begin?",
+    "context": "The compliance SOP notes '80% is entering the red zone' but the precise penalty trigger determines whether 80% already violates the threshold or still has buffer.",
+    "currentValue": "80% described as 'entering the red zone' [NEEDS_INPUT — exact trigger percentage not confirmed]",
+    "options": [
+      "Penalties begin below 80% — the current 80% rate is at the floor",
+      "Penalties begin below 85% — the dealership is currently in violation",
+      "Penalties begin below 75% — current 80% rate still has buffer",
+      "Penalties begin below 90% — the dealership is well into violation territory"
+    ]
+  },
+  {
+    "id": "Q023",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 2. Ship Mode Protocol — Non-Negotiable Pre-Delivery Requirement",
+    "question": "What was the actual tow cost when the ship-mode vehicle died the day after delivery and was towed back?",
+    "context": "The financial penalties file documents this as a confirmed cost — without the dollar amount, the total cost of the ship mode failure cannot be stated in the management SOP.",
+    "currentValue": "Tow cost incurred — confirmed in addition to $275 rework cost [NEEDS_INPUT — exact tow amount unknown]",
+    "options": [
+      "Under $150 (local tow, short distance)",
+      "$150–$350 (standard local tow rate)",
+      "$350–$600 (extended distance or after-hours tow)",
+      "Over $600 (long distance or specialized equipment required)"
+    ]
+  },
+  {
+    "id": "Q024",
+    "category": "VERIFY",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 6. Compliance Summary",
+    "question": "Is ship mode clearance tracked as a separate Stellantis compliance metric, or under general PDI compliance?",
+    "context": "If ship mode has its own metric, the compliance SOP must reference a second rate — if it falls under PDI compliance, the current 80% figure already captures it.",
+    "currentValue": "[VERIFY — no separate compliance rate given for ship mode clearance in source material]",
+    "options": [
+      "Ship mode clearance falls under the general PDI compliance rate — no separate metric",
+      "Ship mode clearance has its own separate Stellantis compliance metric"
+    ]
+  },
+  {
+    "id": "Q025",
+    "category": "VERIFY",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 6. Compliance Summary",
+    "question": "Is dealer trade PDI compliance tracked separately from standard new vehicle PDI in the Stellantis system?",
+    "context": "If dealer trades have a separate metric, the compliance SOP must address two rates — if combined, the 80% figure covers both vehicle types and no separate tracking is needed.",
+    "currentValue": "[VERIFY — separate tracking for dealer trade PDI not confirmed in source material]",
+    "options": [
+      "Dealer trade PDI is tracked under the same metric as standard new vehicle PDI",
+      "Dealer trade PDI has a separate Stellantis compliance metric with its own threshold"
+    ]
+  },
+  {
+    "id": "Q026",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 6. Compliance Summary",
+    "question": "How frequently does RECON misclassification of new vehicle arrivals currently occur at the Edmonton Office?",
+    "context": "The financial impact analysis requires a frequency estimate to quantify the hidden-inventory problem — the urgency and corrective action intensity depend on whether this is rare or routine.",
+    "currentValue": "[NEEDS_INPUT — frequency of misclassification not quantified in source material]",
+    "options": [
+      "Rarely — less than once per month",
+      "Occasionally — once to a few times per month",
+      "Regularly — multiple times per week",
+      "It is the current default — most new arrivals are entered as RECON"
+    ]
+  },
+  {
+    "id": "Q027",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/compliance-requirements.md",
+    "section": "## 6. Compliance Summary",
+    "question": "How often do non-prime (Division One) vehicles mistakenly arrive at the Edmonton Office lot?",
+    "context": "The vehicle arrival decision tree's priority for non-prime checks is calibrated to frequency — a rare event warrants a lower-priority check than a frequent recurring problem.",
+    "currentValue": "[NEEDS_INPUT — frequency of non-prime vehicles arriving on this lot not specified in source]",
+    "options": [
+      "Very rarely — has happened only once or twice in the dealership's history",
+      "Occasionally — a few times per year",
+      "Regularly — at least once per month",
+      "Frequently — occurs weekly or more often"
+    ]
+  },
+  {
+    "id": "Q028",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/financial-penalties.md",
+    "section": "## Penalty Table",
+    "question": "When a vehicle is delivered without detail and the $275 rework is required, who is charged that cost?",
+    "context": "Financial accountability in the management SOP requires specifying who bears this cost — without this, the penalty cannot be written into the escalation and accountability framework.",
+    "currentValue": "[NEEDS_INPUT — who bears the $275 rework cost when a vehicle is delivered without detail]",
+    "options": [
+      "The salesperson who pushed for early delivery bears the cost",
+      "The dealership absorbs it as an operational loss (no individual charged)",
+      "The lot team member who cleared the vehicle without verifying detail",
+      "Split between the salesperson and lot team based on who approved delivery"
+    ]
+  },
+  {
+    "id": "Q029",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/daily-operations-workflow.md",
+    "section": "## 5. End-of-Day Review [NEEDS_INPUT]",
+    "question": "Is there a formal end-of-day lot review process, and if so, what does it cover?",
+    "context": "The daily operations SOP must either include or explicitly exclude an end-of-day process — an undefined process creates inconsistency in when the lot is last verified before closing.",
+    "currentValue": "None — no value recorded; source does not describe any end-of-day lot inspection or sign-off",
+    "options": [
+      "Yes — a formal end-of-day walk covering all zones (details to be documented)",
+      "Yes — a brief check of only the Cage and East Side Fence Line before closing",
+      "No — the morning lot walk is the only mandatory daily inspection"
+    ]
+  },
+  {
+    "id": "Q030",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/daily-operations-workflow.md",
+    "section": "## 1. Morning Lot Walk",
+    "question": "What tool or format is used to document and distribute the morning lot walk task list?",
+    "context": "The morning lot walk SOP must specify where tasks are recorded and how they reach each team — without a defined format, the documentation requirement cannot be enforced.",
+    "currentValue": "None — no value recorded; source confirms a task list is generated but does not specify the tool or format",
+    "options": [
+      "Written on paper, then photographed and sent via team chat",
+      "Directly entered into a digital tool (Airtable, shared doc, or app)",
+      "Verbal assignments during the walk, then confirmed in team chat",
+      "Printed template checklist completed during the walk"
+    ]
+  },
+  {
+    "id": "Q031",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/daily-operations-workflow.md",
+    "section": "## 4. Service Department Routing — Throughout the Day",
+    "question": "When routing a vehicle to service, does the Lot Manager contact Pat or Andy as the primary lead?",
+    "context": "Every service routing step in the SOPs must name a specific recipient — 'Pat or Andy' is not sufficient for a zero-ambiguity SOP where staff cannot use judgment.",
+    "currentValue": "None — source specifies 'Service Department Lead (Pat [AMBIGUOUS] or Andy [AMBIGUOUS])' with no primary identified",
+    "options": [
+      "Pat is the primary contact for all inbound lot routing requests",
+      "Andy is the primary contact for all inbound lot routing requests",
+      "Either Pat or Andy — both are co-leads and equally valid primary contacts"
+    ]
+  },
+  {
+    "id": "Q032",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/communication-and-escalation-protocols.md",
+    "section": "## 2. Documentation — Team Chats",
+    "question": "What platform is used for team chats where lot walk tasks, compliance issues, and escalations are documented?",
+    "context": "Every SOP communication step specifies 'document in team chat' — without knowing the platform, this instruction cannot be operationalized in training materials.",
+    "currentValue": "None — no value recorded; source refers to 'team chats' without specifying the platform",
+    "options": [
+      "Telegram (group messages)",
+      "Slack (workspace channels)",
+      "SMS group text (standard phone numbers)",
+      "Microsoft Teams",
+      "WhatsApp group"
+    ]
+  },
+  {
+    "id": "Q033",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/communication-and-escalation-protocols.md",
+    "section": "## 3. Sold Sign Enforcement — 3-Strike Escalation Protocol",
+    "question": "What action is taken if the 3-strike sold sign protocol fails to produce compliance after Strike 3?",
+    "context": "Every decision tree branch must terminate in a defined action — without a specified post-Strike 3 escalation, the sold sign enforcement tree has an open-ended terminal branch.",
+    "currentValue": "None — no value recorded; source specifies Strikes 1–3 only; post-failure escalation not documented",
+    "options": [
+      "Escalate to Owner / General Manager directly",
+      "Lot Manager places the sold sign personally and documents the failure",
+      "Formal written notice issued to Sales Manager (Kevin) with incident details",
+      "Owner/GM informed via team chat with full escalation documentation"
+    ]
+  },
+  {
+    "id": "Q034",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/communication-and-escalation-protocols.md",
+    "section": "## 4. Staff Parking Violation Protocol",
+    "question": "What is the correct protocol when an existing employee (who knows the rules) parks on the lot?",
+    "context": "The staff parking decision tree branches by employee type — without a protocol for existing employees, the tree has an undefined branch that lot staff will have to improvise.",
+    "currentValue": "None — no value recorded; source specifies only the new employee first-violation scenario explicitly",
+    "options": [
+      "Same welcoming language as new employee — treat it as a non-confrontational reminder",
+      "Direct reminder without the welcoming framing (employee already knows the rule)",
+      "Report to Sales Manager or immediate supervisor — do not address directly"
+    ]
+  },
+  {
+    "id": "Q035",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/communication-and-escalation-protocols.md",
+    "section": "## 4. Staff Parking Violation Protocol",
+    "question": "What is the escalation path when an employee repeatedly parks on the lot after being reminded?",
+    "context": "The staff parking enforcement tree requires a terminal outcome for persistent non-compliance — without a defined consequence, enforcement becomes inconsistent across incidents.",
+    "currentValue": "None — no value recorded; repeat violation escalation path not specified in source material",
+    "options": [
+      "Escalate to Sales Manager or the employee's immediate supervisor",
+      "Escalate directly to Owner / General Manager",
+      "Formal written warning issued by management",
+      "Financial penalty applied (amount to be defined by management)"
+    ]
+  },
+  {
+    "id": "Q036",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/service-department-utilization.md",
+    "section": "## 2. Service Department Roles",
+    "question": "Who is the unidentified 9th member of the service department?",
+    "context": "The service department headcount is confirmed as 9 but only 8 named roles are identifiable from source material — the 9th person's role affects PDI capacity and task routing.",
+    "currentValue": "9 total staff confirmed; 8 named roles identified; 9th staff member identity [AMBIGUOUS — unidentified]",
+    "options": [
+      "A second unnamed Technician (9th role is a Technician)",
+      "A Service Advisor or customer-facing intake role not otherwise named",
+      "Giselle fills the 9th slot — the count includes her dual admin/tech role"
+    ]
+  },
+  {
+    "id": "Q037",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/service-department-utilization.md",
+    "section": "## 4. The Utilization Problem and Solution",
+    "question": "Approximately how many internal PDIs does the Edmonton Office require per week on average?",
+    "context": "Quantifying internal PDI volume is essential for calculating how much routing internal work to service actually offsets the $3,000/day underutilization problem.",
+    "currentValue": "[NEEDS_INPUT — exact number of internal PDIs per day/week not specified in source material]",
+    "options": [
+      "1–5 PDIs per week (low new vehicle intake)",
+      "6–15 PDIs per week (moderate intake)",
+      "16–30 PDIs per week (high intake)",
+      "More than 30 PDIs per week (very high intake)"
+    ]
+  },
+  {
+    "id": "Q038",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/service-department-utilization.md",
+    "section": "## 4. The Utilization Problem and Solution",
+    "question": "Are internal PDIs for lot vehicles tracked as billable hours in the service department's financial records?",
+    "context": "The financial impact analysis must describe how internal PDI routing offsets the $3,000/day labor cost — whether these generate billable charges or overhead allocation changes the calculation.",
+    "currentValue": "[NEEDS_INPUT — how internal PDIs are tracked financially is not specified in source material]",
+    "options": [
+      "Yes — internal PDIs are logged as billable hours charged to the vehicle's cost",
+      "No — internal PDIs are tracked as overhead, not billable charges",
+      "Partially — some work types are billable and others are absorbed as overhead"
+    ]
+  },
+  {
+    "id": "Q039",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/external-vendors.md",
+    "section": "## Overview",
+    "question": "What is the correct name of the primary vehicle detailing vendor — DHG or DHD?",
+    "context": "All SOPs, checklists, and vendor routing steps reference this vendor by name — using the wrong name causes confusion when staff try to contact or schedule the vendor.",
+    "currentValue": "DHG (per source walkthrough transcript) / DHD (per CLAUDE.md and project instruction files) [AMBIGUOUS]",
+    "options": ["DHG", "DHD"]
+  },
+  {
+    "id": "Q040",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/external-vendors.md",
+    "section": "## 1. DHG — Primary Detailing Vendor",
+    "question": "What is the relationship between Chris H., Max, and DHG/DHD in vehicle purchasing and detailing?",
+    "context": "The vehicle arrival decision tree must account for Chris H. acquisitions — if he uses a separate detailing arrangement through Max, the standard routing tree needs a dedicated branch.",
+    "currentValue": "Source references 'Chris H. works with Max/DHD' [AMBIGUOUS — relationship and effect on standard flow unclear]",
+    "options": [
+      "Chris H. uses the same DHG/DHD vendor as the lot — no special process",
+      "Chris H. arranges his own detail through Max — vehicles arrive already detailed",
+      "Max is the DHG/DHD contact person — Chris H. schedules through Max like all others"
+    ]
+  },
+  {
+    "id": "Q041",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/external-vendors.md",
+    "section": "## 1. DHG — Primary Detailing Vendor",
+    "question": "What is the phone number or scheduling method for requesting DHG to detail a vehicle?",
+    "context": "Every SOP step that routes a vehicle to DHG must include actionable contact information — without it, staff cannot execute the routing step.",
+    "currentValue": "[NEEDS_INPUT — DHG contact information not provided in source material]",
+    "options": [
+      "Phone call to a DHG number (to be provided by management)",
+      "Request through a specific named DHG contact person (to be provided)",
+      "Booked through an online or app-based scheduling system"
+    ]
+  },
+  {
+    "id": "Q042",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/external-vendors.md",
+    "section": "## 2. Hughes — Quick Wash Vendor",
+    "question": "What is the phone number or scheduling method for requesting a Hughes quick wash?",
+    "context": "SOPs that list Hughes as an alternative to DHG need actionable contact details — without them, the 'route to Hughes' step in the decision tree cannot be completed.",
+    "currentValue": "[NEEDS_INPUT — Hughes contact information not provided in source material]",
+    "options": [
+      "Phone call to a Hughes number (to be provided by management)",
+      "Request through a specific named Hughes contact person (to be provided)",
+      "Drive-through or walk-in booking — no advance contact required"
+    ]
+  },
+  {
+    "id": "Q043",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/external-vendors.md",
+    "section": "## 2. Hughes — Quick Wash Vendor",
+    "question": "What is the cost per vehicle for a Hughes quick wash?",
+    "context": "The financial reference tables include all operational costs — the Hughes wash cost is missing and cannot be compared to the known $60 DHG detail cost without a figure.",
+    "currentValue": "[NEEDS_INPUT — Hughes cost per vehicle not specified in source material]",
+    "options": [
+      "Under $20 per vehicle",
+      "$20–$40 per vehicle",
+      "$40–$60 per vehicle (similar to DHG full detail)",
+      "Over $60 per vehicle"
+    ]
+  },
+  {
+    "id": "Q044",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/external-vendors.md",
+    "section": "## 2. Hughes — Quick Wash Vendor",
+    "question": "What criteria determine whether a vehicle needs a full DHG detail vs. a Hughes quick wash?",
+    "context": "The vehicle preparation decision tree needs a binary rule to select between these two vendors — without criteria, lot staff must use judgment, violating the zero-ambiguity standard.",
+    "currentValue": "[NEEDS_INPUT — criteria not specified; source only states Hughes is for 'fast turnaround when full detail not required']",
+    "options": [
+      "Vehicle type: new arrivals always get DHG; trade-ins may qualify for Hughes",
+      "Condition-based: visibly dirty gets DHG; lightly dusty may get Hughes",
+      "Timing-based: same-day delivery allows Hughes; standard lead time requires DHG",
+      "Manager decision only — no set rule, Lot Manager decides case by case"
+    ]
+  },
+  {
+    "id": "Q045",
+    "category": "NEEDS_INPUT",
+    "file": "knowledge/external-vendors.md",
+    "section": "## 1. DHG — Primary Detailing Vendor",
+    "question": "How long does a full DHG vehicle detail take from drop-off to pickup?",
+    "context": "Lot placement scheduling depends on knowing when a vehicle will be available after detailing — without the turnaround time, PDI deadlines and Cage readiness cannot be planned.",
+    "currentValue": "[NEEDS_INPUT — DHG turnaround time not provided in source material]",
+    "options": [
+      "Same day — under 4 hours",
+      "Next day — overnight turnaround",
+      "2–3 business days",
+      "Varies by vehicle condition — no consistent turnaround time"
+    ]
+  },
+  {
+    "id": "Q046",
+    "category": "AMBIGUOUS",
+    "file": "knowledge/signage-and-tagging-standards.md",
+    "section": "## 1. Stock-In Tags",
+    "question": "Were blue stock-in tags ever applied at the Edmonton Office, requiring retroactive re-tagging in white?",
+    "context": "If any blue tags were applied before the Division One prohibition was established, those vehicles carry incorrect tags that cause identification confusion during the morning lot walk.",
+    "currentValue": "White is the only color currently in use; blue was originally planned for Division One [from Phase 1 Report — AMBIGUOUS]",
+    "options": [
+      "No — blue tags were never applied here; all tags on the lot are white",
+      "Yes — some blue tags were applied and need retroactive replacement with white"
+    ]
+  }
+]

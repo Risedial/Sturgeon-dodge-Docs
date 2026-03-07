@@ -1,0 +1,248 @@
+{
+  "project": "Sturgeon Dodge Edmonton Office Lot Operations SOP",
+  "schema_version": "1.0",
+  "last_updated": "2026-02-27",
+  "notes": "State file shared across all sessions. Each prompt reads this file to verify prerequisites and writes to it upon completion. Do not edit manually unless resetting a phase.",
+
+  "phases": {
+    "phase_1": {
+      "label": "Knowledge Extraction",
+      "status": "complete",
+      "started_at": "2026-02-27",
+      "completed_at": "2026-02-27",
+      "files_expected": [
+        "knowledge/personnel-registry.md",
+        "knowledge/zone-definitions.md",
+        "knowledge/vehicle-statuses-and-transitions.md",
+        "knowledge/lot-placement-rules.md",
+        "knowledge/signage-and-tagging-standards.md",
+        "knowledge/key-cafe-protocol.md",
+        "knowledge/compliance-requirements.md",
+        "knowledge/financial-penalties.md",
+        "knowledge/daily-operations-workflow.md",
+        "knowledge/communication-and-escalation-protocols.md",
+        "knowledge/service-department-utilization.md",
+        "knowledge/external-vendors.md",
+        "knowledge/_PHASE_1_REPORT.md"
+      ],
+      "files_confirmed_created": [
+        "knowledge/personnel-registry.md",
+        "knowledge/zone-definitions.md",
+        "knowledge/vehicle-statuses-and-transitions.md",
+        "knowledge/lot-placement-rules.md",
+        "knowledge/signage-and-tagging-standards.md",
+        "knowledge/key-cafe-protocol.md",
+        "knowledge/compliance-requirements.md",
+        "knowledge/financial-penalties.md",
+        "knowledge/daily-operations-workflow.md",
+        "knowledge/communication-and-escalation-protocols.md",
+        "knowledge/service-department-utilization.md",
+        "knowledge/external-vendors.md",
+        "knowledge/_PHASE_1_REPORT.md"
+      ],
+      "quality_gates_passed": true,
+      "needs_input_items": [
+        "personnel-registry.md: Chris H. acquisitions process — does it bypass standard lot flow?",
+        "personnel-registry.md: Official role titles for Scott, Don, and Alex",
+        "vehicle-statuses-and-transitions.md: Exact Airtable labels for PDI In Progress, Dealer Trade Incoming, Auction Bound states",
+        "zone-definitions.md: Power Sport / Quad Corner exact slot count",
+        "zone-definitions.md: Auction Area exact slot count",
+        "key-cafe-protocol.md: Accountability Agreement physical location and who administers it",
+        "key-cafe-protocol.md: Physical location of Key Cafe on premises",
+        "key-cafe-protocol.md: Exact replacement cost for common vehicle keys",
+        "compliance-requirements.md: Exact Stellantis fine amounts for PDI non-compliance",
+        "compliance-requirements.md: Exact compliance rate threshold where Stellantis penalties begin",
+        "financial-penalties.md: Who bears the $275 rework cost when vehicle delivered without detail",
+        "financial-penalties.md: Exact tow cost from the ship mode delivery failure incident",
+        "daily-operations-workflow.md: End-of-day review process — does one exist?",
+        "daily-operations-workflow.md: Format and tool used for morning lot walk task list",
+        "communication-and-escalation-protocols.md: Exact team chat platform name",
+        "communication-and-escalation-protocols.md: Action after 3-strike protocol fails",
+        "communication-and-escalation-protocols.md: Staff parking protocol for existing employees and repeat violations",
+        "service-department-utilization.md: Internal PDI volume per day or week",
+        "service-department-utilization.md: How internal PDIs are tracked financially",
+        "external-vendors.md: DHG contact information",
+        "external-vendors.md: Hughes contact information and per-vehicle cost",
+        "external-vendors.md: Criteria for full detail (DHG) vs. quick wash (Hughes)",
+        "signage-and-tagging-standards.md: Exact fields filled in on stock-in tag"
+      ],
+      "ambiguous_items": [
+        "personnel-registry.md: Admin - Stock Tags name is 'Georgia' in walkthrough but 'Jorja' in CLAUDE.md — must be verified",
+        "personnel-registry.md: Two entries for 'Andy' in service — may be same person or two different people",
+        "personnel-registry.md: Don and Alex listed together for lot policing role — unclear if one or two people",
+        "external-vendors.md: Primary detailing vendor is 'DHG' in walkthrough but 'DHD' in CLAUDE.md — must be verified",
+        "service-department-utilization.md: 9 total service staff stated but only 8 named roles identified",
+        "signage-and-tagging-standards.md: Original plan for blue Division One tags — context only, no action needed"
+      ],
+      "report_file": "knowledge/_PHASE_1_REPORT.md",
+      "prerequisite_phases": [],
+      "notes": "Phase 1 completed in single quality-gated session on 2026-02-27. All 13 files created (12 knowledge + 1 report). All quality gates passed. 23 NEEDS_INPUT items and 6 AMBIGUOUS items documented. Key ambiguities: 'Georgia' vs 'Jorja' for Admin - Stock Tags; 'DHG' vs 'DHD' for primary detailing vendor."
+    },
+
+    "phase_2": {
+      "label": "Systems Analysis",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "files_expected": [
+        "systems-analysis/cause-effect-map.md",
+        "systems-analysis/failure-modes.md",
+        "systems-analysis/financial-impact-analysis.md",
+        "systems-analysis/_PHASE_2_REPORT.md"
+      ],
+      "files_confirmed_created": [],
+      "quality_gates_passed": false,
+      "needs_input_items": [],
+      "ambiguous_items": [],
+      "report_file": "systems-analysis/_PHASE_2_REPORT.md",
+      "prerequisite_phases": ["phase_1"],
+      "notes": ""
+    },
+
+    "phase_3a": {
+      "label": "Decision Trees 1-13 (Vehicle Lifecycle)",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "files_expected": [
+        "systems-analysis/decision-trees/vehicle-arrival-new-standard.md",
+        "systems-analysis/decision-trees/vehicle-arrival-ship-mode.md",
+        "systems-analysis/decision-trees/vehicle-arrival-dealer-trade.md",
+        "systems-analysis/decision-trees/vehicle-pdi-routing.md",
+        "systems-analysis/decision-trees/vehicle-pdi-compliance-deadline.md",
+        "systems-analysis/decision-trees/vehicle-detailing-routing.md",
+        "systems-analysis/decision-trees/vehicle-categorization.md",
+        "systems-analysis/decision-trees/vehicle-placement-cage.md",
+        "systems-analysis/decision-trees/vehicle-sold-processing.md",
+        "systems-analysis/decision-trees/vehicle-trade-in-processing.md",
+        "systems-analysis/decision-trees/vehicle-customer-on-lot.md",
+        "systems-analysis/decision-trees/vehicle-bnd-handling.md",
+        "systems-analysis/decision-trees/vehicle-recon-routing.md"
+      ],
+      "files_confirmed_created": [],
+      "quality_gates_passed": false,
+      "needs_input_items": [],
+      "ambiguous_items": [],
+      "report_file": "systems-analysis/decision-trees/_PHASE_3A_REPORT.md",
+      "prerequisite_phases": ["phase_1", "phase_2"],
+      "notes": "Phase 3 is split into two sessions. 3A covers vehicle lifecycle trees 1-13. 3B must complete before Phase 4 can begin."
+    },
+
+    "phase_3b": {
+      "label": "Decision Trees 14-25 (Operational, Personnel, Compliance)",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "files_expected": [
+        "systems-analysis/decision-trees/vehicle-auction-routing.md",
+        "systems-analysis/decision-trees/vehicle-non-prime-identification.md",
+        "systems-analysis/decision-trees/vehicle-seasonal-power-sport.md",
+        "systems-analysis/decision-trees/vehicle-status-unknown.md",
+        "systems-analysis/decision-trees/key-plate-sign-out.md",
+        "systems-analysis/decision-trees/key-plate-sign-in.md",
+        "systems-analysis/decision-trees/key-plate-lost-response.md",
+        "systems-analysis/decision-trees/staff-parking-new-employee.md",
+        "systems-analysis/decision-trees/staff-parking-repeat-violation.md",
+        "systems-analysis/decision-trees/sold-sign-missing-enforcement.md",
+        "systems-analysis/decision-trees/morning-lot-walk.md",
+        "systems-analysis/decision-trees/accountability-agreement-onboarding.md"
+      ],
+      "files_confirmed_created": [],
+      "quality_gates_passed": false,
+      "needs_input_items": [],
+      "ambiguous_items": [],
+      "report_file": "systems-analysis/decision-trees/_PHASE_3B_REPORT.md",
+      "prerequisite_phases": ["phase_1", "phase_2", "phase_3a"],
+      "notes": "Phase 3B completes the full set of 25 decision trees. Phase 4 requires BOTH phase_3a and phase_3b to be complete."
+    },
+
+    "phase_4": {
+      "label": "SOP Generation",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "files_expected": [
+        "sops/master-sop.md",
+        "sops/team-lot.md",
+        "sops/team-sales.md",
+        "sops/team-service.md",
+        "sops/team-management.md",
+        "sops/_PHASE_4_REPORT.md"
+      ],
+      "files_confirmed_created": [],
+      "quality_gates_passed": false,
+      "needs_input_items": [],
+      "ambiguous_items": [],
+      "report_file": "sops/_PHASE_4_REPORT.md",
+      "prerequisite_phases": ["phase_1", "phase_2", "phase_3a", "phase_3b"],
+      "notes": ""
+    },
+
+    "phase_5": {
+      "label": "Checklists",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "files_expected": [
+        "checklists/vehicle-audit-new.md",
+        "checklists/vehicle-audit-flr.md",
+        "checklists/vehicle-audit-sold.md",
+        "checklists/vehicle-audit-bnd.md",
+        "checklists/vehicle-audit-recon.md",
+        "checklists/morning-lot-walk-checklist.md",
+        "checklists/pdi-completion-checklist.md",
+        "checklists/key-plate-accountability-checklist.md",
+        "checklists/_PHASE_5_REPORT.md"
+      ],
+      "files_confirmed_created": [],
+      "quality_gates_passed": false,
+      "needs_input_items": [],
+      "ambiguous_items": [],
+      "report_file": "checklists/_PHASE_5_REPORT.md",
+      "prerequisite_phases": ["phase_4"],
+      "notes": ""
+    },
+
+    "phase_6": {
+      "label": "App Specification",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "files_expected": [
+        "app-spec/lot-checklist-app-requirements.md",
+        "app-spec/_PHASE_6_REPORT.md"
+      ],
+      "files_confirmed_created": [],
+      "quality_gates_passed": false,
+      "needs_input_items": [],
+      "ambiguous_items": [],
+      "report_file": "app-spec/_PHASE_6_REPORT.md",
+      "prerequisite_phases": ["phase_5", "phase_3a", "phase_3b"],
+      "notes": ""
+    },
+
+    "phase_7": {
+      "label": "Document Generation",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "files_expected": [
+        "outputs/master-sop.docx",
+        "outputs/team-lot.docx",
+        "outputs/team-sales.docx",
+        "outputs/team-service.docx",
+        "outputs/team-management.docx",
+        "outputs/vehicle-audit-checklists.docx",
+        "outputs/operational-checklists.docx",
+        "outputs/_PHASE_7_REPORT.md"
+      ],
+      "files_confirmed_created": [],
+      "quality_gates_passed": false,
+      "needs_input_items": [],
+      "ambiguous_items": [],
+      "report_file": "outputs/_PHASE_7_REPORT.md",
+      "prerequisite_phases": ["phase_4", "phase_5"],
+      "notes": "If .docx generation is not available, produce fully-formatted .md files in outputs/ and note the format in the report."
+    }
+  }
+}

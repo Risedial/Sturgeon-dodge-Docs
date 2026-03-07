@@ -1,0 +1,9 @@
+Rule_Type,Purpose,Required_Params,Example
+CATEGORY_ASSIGN,Assign a category based on field conditions. First matching rule (by priority) wins.,"source_field, operator, threshold, output_category",KM <= 1000 → NEW
+CATEGORY_OVERRIDE,Override an existing category when a specific status is present. Applied after initial assignment.,"from_category, when_status, to_category",NEW + 'BOOKED | NOT DELIVERED' → BND
+VALUE_MAP,"Define mappings: brand priorities, body type normalization, etc. Grouped by map_name.","map_name, input_value, output_value",BRAND_PRIORITY: Jeep → 1
+SLOT_CONSTRAINT,Define rules for specific slots or slot ranges. Multiple constraints per slot allowed.,"slots, constraint_type, value","C01 MODEL_WHITELIST Compass,Wrangler"
+ZONE_PRIORITY,Define fill order for Fence and Left Side zones.,"zone, fill_order, category","FENCE: 1=SOLD, 2=BND, 3=OVERFLOW"
+SORT_RULE,Define vehicle sorting order for placement. Lower sort_order = higher priority.,"field, direction, sort_order","BRAND ASC (1st), YEAR DESC (3rd)"
+GENERAL_SETTING,System-wide configuration values.,"setting_name, value, data_type",NEW_KM_THRESHOLD = 1000
+OVERFLOW_RULE,"Control overflow behavior (which vehicles overflow first, destination labels).","rule_name, value",SEDAN_OVERFLOW_FIRST = TRUE

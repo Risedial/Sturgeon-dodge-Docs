@@ -1,0 +1,985 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appvPungAt7HkpYIY",
+          "mode": "list",
+          "cachedResultName": "INVENTORY SYSTEMS",
+          "cachedResultUrl": "https://airtable.com/appvPungAt7HkpYIY"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblvXuzov6af1vuhE",
+          "mode": "list",
+          "cachedResultName": "MASTER INVENTORY",
+          "cachedResultUrl": "https://airtable.com/appvPungAt7HkpYIY/tblvXuzov6af1vuhE"
+        },
+        "filterByFormula": "AND({STOCK LOCATION} = 'AB | EDMONTON OFFICE', DATETIME_DIFF(NOW(), {DATE | TIME VERIFIED}, 'days') = 0)",
+        "returnAll": false,
+        "limit": 60,
+        "options": {
+          "fields": [
+            "STOCK LOCATION",
+            "DATE | TIME VERIFIED",
+            "V.I.N.",
+            "YEAR",
+            "MAKE",
+            "MODEL",
+            "INVENTORY STATUS",
+            "TYPE",
+            "TRIMLINE",
+            "COLOUR",
+            "KM"
+          ]
+        }
+      },
+      "id": "43c435c8-692b-47e7-9f3f-75bac4fe562d",
+      "name": "Airtable: Pull Verified Vehicles1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        992,
+        3712
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "kUgUHJqZru8DkUAa",
+          "name": "Inventory Team - AutoCredit"
+        }
+      },
+      "notes": "Pulls all vehicles verified today at Edmonton office. Fields: VIN, make, model, year, color, status, body_type, new_used."
+    },
+    {
+      "parameters": {
+        "jsCode": "const records = $input.all();\n\nconst lowKM = records\n  .filter(record => {\n    const km = record.json?.KM;\n    return typeof km === 'number' && km <= 1000;\n  })\n  .map(record => ({\n    json: {\n      ...record.json,\n      newUsed: \"new\"\n    }\n  }));\n\nif (lowKM.length === 0) {\n  return [{ json: { message: 'No records with 1000 KM or less', count: 0 } }];\n}\n\nreturn lowKM;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        3808
+      ],
+      "id": "308a45e7-ac35-473f-b2ff-e15d2fd8765c",
+      "name": "NEW Vehicles"
+    },
+    {
+      "parameters": {
+        "jsCode": "const records = $input.all();\n\nconst highKM = records\n  .filter(record => {\n    const km = record.json?.KM;\n    return typeof km === 'number' && km >= 1001;\n  })\n  .map(record => ({\n    json: {\n      ...record.json,\n      newUsed: \"used\"\n    }\n  }));\n\nif (highKM.length === 0) {\n  return [{ json: { message: 'No records with 1001 KM or more', count: 0 } }];\n}\n\nreturn highKM;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        3616
+      ],
+      "id": "e6a46640-9eaa-438f-b532-f31f2ff8edf9",
+      "name": "USED Vehicles1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1440,
+        3712
+      ],
+      "id": "7ba0c5a1-8218-4e10-b534-7c9eaabe2919",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// TRANSFORM: Flatten rows for Google Sheets\n// ============================================================\n\nconst normalizeBodyType = (bodyType) => {\n  if (!bodyType) return '';\n  const b = bodyType.toString().toLowerCase().trim();\n  if (b.includes('suv')) return 'SUV';\n  if (b.includes('van')) return 'Van';\n  if (b.includes('truck')) return 'Truck';\n  if (b.includes('sedan') || b.includes('coupe')) return 'Sedan';\n  return 'SUV';\n};\n\nconst formatDest = (dest) => {\n  if (dest === 'CAGE') return 'Cage slot';\n  if (dest === 'FENCE') return 'Fence line';\n  if (dest === 'LEFT SIDE' || dest === 'LEFT') return 'Left side';\n  return dest || '';\n};\n\n// Get input data\nconst inputData = $input.first().json;\nconst rows = inputData.placementMap || [];\n\n// If no rows, return debug info\nif (rows.length === 0) {\n  return [{\n    json: {\n      Zone: 'ERROR',\n      Slot: 'NO_DATA',\n      VIN: '',\n      Year: '',\n      Make: 'No placement data received',\n      Model: '',\n      Color: '',\n      'Body Type': '',\n      Category: '',\n      Status: '',\n      Assigned: '',\n      Notes: ''\n    }\n  }];\n}\n\nreturn rows.map((row) => {\n  let status = '';\n  let notes = '';\n  \n  if (row.zone === 'LOOSE' && row.vin) {\n    status = 'TEMP';\n    notes = row.destinationZone ? `→ ${formatDest(row.destinationZone)}` : 'Awaiting space';\n  } else if (row.vin) {\n    // Use original Airtable INVENTORY STATUS\n    status = row.status || '';\n  }\n  \n  return {\n    json: {\n      Zone: row.zone || '',\n      Slot: row.slot || '',\n      VIN: row.vin || '',\n      Year: row.year || '',\n      Make: row.vin ? (row.make || '') : '',\n      Model: row.model || '',\n      Color: row.color || '',\n      'Body Type': row.vin ? normalizeBodyType(row.bodyType) : '',\n      Category: row.vin ? (row.category || '') : '',\n      Status: status,\n      Assigned: row.assigned || '',\n      Notes: notes\n    }\n  };\n});"
+      },
+      "id": "9bfb1a3a-bc0d-41ae-859a-312f1c88263d",
+      "name": "Transform: Flatten Rows2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2336,
+        3712
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// BUILD TELEGRAM MESSAGE — LOT STATUS UPDATE\n// ============================================================\n\nconst data = $('Run Placement Algorithm1').first().json;\nconst s = data.summary;\nconst looseAssignments = data.looseAssignments || [];\nconst excluded = data.excluded || [];\n\nconst ts = new Date().toLocaleString('en-US', { \n  timeZone: 'America/Edmonton', \n  hour12: true, \n  month: 'short', \n  day: 'numeric', \n  hour: 'numeric', \n  minute: '2-digit' \n});\n\n// Helper to format destination zone\nconst formatDest = (dest) => {\n  if (!dest) return 'UNKNOWN';\n  const d = dest.toUpperCase();\n  if (d === 'CAGE') return 'CAGED LOT';\n  if (d === 'FENCE' || d === 'FENCE LINE') return 'FENCE - Right side of building';\n  if (d === 'LEFT SIDE' || d === 'LEFT') return 'LEFT SIDE OF BUILDING';\n  return dest.toUpperCase();\n};\n\nconst totalOverflow = looseAssignments.length;\n\nlet msg = '';\n\n// ── HEADER ──\nmsg += `<b>LOT STATUS</b> — ${ts}\\n\\n`;\n\n// ── ZONE STATUS ──\nmsg += `<b>ZONE STATUS</b>\\n`;\nmsg += `CAGED LOT:  ${s.cageFilled}/${s.cageCapacity} spots used\\n`;\nmsg += `FENCE: ${s.fenceFilled}/${s.fenceCapacity} spots used\\n`;\nmsg += `LEFT SIDE OF BUILDING:  ${s.leftFilled}/${s.leftCapacity} spots used\\n\\n`;\n\n// ── SUMMARY ──\nmsg += `<b>-- SUMMARY --</b>\\n`;\nmsg += `TOTAL OVERFLOW UNITS: ${totalOverflow}\\n\\n`;\n\n// ── OVERFLOW LIST ──\nif (totalOverflow > 0) {\n  msg += `<b>-- OVERFLOW LIST --</b>\\n\\n`;\n  \n  for (const v of looseAssignments) {\n    msg += `VIN: ${v.vin}\\n`;\n    msg += `${v.make} ${v.model} ${v.year} ${v.color || ''}\\n`;\n    msg += `parking spot: ${formatDest(v.destinationZone)}\\n`;\n    msg += `\\n`;\n  }\n} else {\n  msg += `✅ No overflow units. All vehicles have designated spots.\\n\\n`;\n}\n\n// ── DATA ISSUES ──\nif (excluded.length > 0) {\n  msg += `⚠️ ${excluded.length} vehicle(s) skipped — missing Airtable data\\n\\n`;\n}\n\n// ── REMINDERS ──\nmsg += `<b>Reminder:</b>\\n`;\nmsg += `• When a unit arrives to location, please verify location in Airtable ASAP.\\n`;\nmsg += `• When moving a unit to Sturgeon (Legal), please verify new location ASAP.\\n`;\n\nreturn [{ json: { text: msg } }];"
+      },
+      "id": "e309dbbf-4934-42cc-a238-ac437dc8c65b",
+      "name": "Build Telegram Messages2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2784,
+        3936
+      ],
+      "notes": "Generates Telegram messages: escalation alerts (sent first) + daily summary. HTML formatted."
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs",
+          "mode": "list",
+          "cachedResultName": "lot-placement-engine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1011859554,
+          "mode": "list",
+          "cachedResultName": "Placement Map",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs/edit#gid=1011859554"
+        },
+        "clear": "specificRows",
+        "startIndex": 2,
+        "rowsToDelete": 100
+      },
+      "id": "04e017ab-04f2-4a5b-b49e-5168bdf98897",
+      "name": "GSheets: Clear Placement Map2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2112,
+        3712
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "z3AMPbAtQvtv0b2S",
+          "name": "thealexbitar google sheets"
+        }
+      },
+      "notes": "Clears rows 2-36 of Placement Map before writing new assignments. Preserves header row."
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs",
+          "mode": "list",
+          "cachedResultName": "lot-placement-engine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Placement Map"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Zone": "={{ $json.Zone }}",
+            "Slot": "={{ $json.Slot }}",
+            "VIN": "={{ $json.VIN }}",
+            "Year": "={{ $json.Year }}",
+            "Make": "={{ $json.Make }}",
+            "Model": "={{ $json.Model }}",
+            "Color": "={{ $json.Color }}",
+            "Body Type": "={{ $json['Body Type'] }}",
+            "Category": "={{ $json.Category }}",
+            "Status": "={{ $json.Status }} ",
+            "Assigned": "={{ $json.Assigned }}",
+            "Notes": "={{ $json.Notes }}"
+          },
+          "matchingColumns": [
+            "Zone"
+          ],
+          "schema": [
+            {
+              "id": "Zone",
+              "displayName": "Zone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Slot",
+              "displayName": "Slot",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "VIN",
+              "displayName": "VIN",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Year",
+              "displayName": "Year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Make",
+              "displayName": "Make",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Model",
+              "displayName": "Model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Color",
+              "displayName": "Color",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Body Type",
+              "displayName": "Body Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Assigned",
+              "displayName": "Assigned",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ad0e4f66-3c5f-4587-a847-1af36b775274",
+      "name": "GSheets: Write Placement Map2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2560,
+        3792
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "z3AMPbAtQvtv0b2S",
+          "name": "thealexbitar google sheets"
+        }
+      },
+      "notes": "Writes all 35 placement rows (20 cage + 5 fence + 5 left + 5 loose) to the Placement Map sheet."
+    },
+    {
+      "parameters": {
+        "content": "# LOT MANAGEMENT ENGINE \n",
+        "height": 720,
+        "width": 4624,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        3472
+      ],
+      "id": "7d2d7cb8-82d9-4a9a-82cb-32e1a03931a3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3232,
+        3856
+      ],
+      "id": "838765cb-fe46-4e69-9ccd-6f190007770c",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lot-placement-run",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "609da44a-414f-4888-8196-fa47cf02b9c4",
+      "name": "Webhook: Run Placement1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        3808
+      ],
+      "webhookId": "lot-placement-run",
+      "notes": "Triggered by Vercel app 'Run Placement' button. POST body can include optional overrides."
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// --- Find the daily log entry (has \"Date\" and \"Run Time\") ---\nconst log = items.find(i => i.json['Date'] && i.json['Run Time'])?.json || {};\n\n// --- Parse \"17/20\" format into filled/capacity ---\nfunction parseFraction(str) {\n  if (!str) return { filled: 0, capacity: 0 };\n  const parts = String(str).split('/');\n  return {\n    filled: parseInt(parts[0]) || 0,\n    capacity: parseInt(parts[1]) || 0\n  };\n}\n\nconst cage = parseFraction(log['Cage Filled']);\nconst fence = parseFraction(log['Fence Filled']);\nconst left = parseFraction(log['Left Filled']);\n\n// --- Collect placement entries (have \"Zone\" and \"Slot\" but NOT \"Date\") ---\nconst placements = items\n  .filter(i => i.json['Zone'] && i.json['Slot'] && !i.json['Date'] && !i.json['ok'])\n  .map(i => {\n    const d = i.json;\n    return {\n      zone: d['Zone'],\n      slot: d['Slot'],\n      vin: d['VIN'] || '',\n      year: d['Year'] || '',\n      make: d['Make'] || '',\n      model: d['Model'] || '',\n      color: d['Color'] || '',\n      bodyType: (d['Body Type'] || '').toUpperCase(),\n      category: d['Category'] || '',\n      status: d['Status'] || '',\n      notes: d['Notes'] || '',\n      destinationZone: d['destinationZone'] || d['Destination Zone'] || ''\n    };\n  });\n\n// --- Build escalations (LOOSE vehicles with a VIN) ---\nconst escalations = placements\n  .filter(p => p.zone === 'LOOSE' && p.vin)\n  .map(p => ({\n    slot: p.slot,\n    vin: p.vin,\n    year: p.year,\n    make: p.make,\n    model: p.model,\n    color: p.color,\n    category: p.category,\n    bodyType: p.bodyType,\n    destinationZone: p.destinationZone\n  }));\n\n// --- Count by category ---\nconst byCategory = {};\nplacements.forEach(p => {\n  if (p.vin && p.category) {\n    byCategory[p.category] = (byCategory[p.category] || 0) + 1;\n  }\n});\n\nconst totalVehicles = parseInt(log['Vehicles Verified']) || placements.filter(p => p.vin).length;\nconst totalExcluded = parseInt(log['Excluded (Missing Data)']) || 0;\n\nreturn [{\n  json: {\n    success: true,\n    summary: {\n      totalVehicles: totalVehicles,\n      totalCategorized: totalVehicles - totalExcluded,\n      totalExcluded: totalExcluded,\n      totalPlaced: placements.filter(p => p.vin).length,\n      cageFilled: cage.filled,\n      cageCapacity: cage.capacity || 20,\n      fenceFilled: fence.filled,\n      fenceCapacity: fence.capacity || 5,\n      leftFilled: left.filled,\n      leftCapacity: left.capacity || 5,\n      looseFilled: parseInt(log['Loose Used']) || escalations.length,\n      looseCapacity: 'unlimited',\n      stillUnplacedCount: 0,\n      byCategory: byCategory\n    },\n    placementMap: placements,\n    escalations: escalations,\n    excluded: [],\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "b1eee79e-fa6e-4100-befb-5bfd12bf2342",
+      "name": "Build Webhook Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3456,
+        3856
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "7777bd07-8ee7-452c-98e6-184afb754cd1",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3680,
+        3856
+      ],
+      "notes": "Returns full placement response to Vercel app. Expects upstream nodes to provide: totalVehicles, cageFilled, fenceFilled, leftFilled, looseFilled, byCategory, placementMap array, escalations array, excluded array."
+    },
+    {
+      "parameters": {
+        "chatId": "7932435045",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "9e87d0de-7c59-4143-a176-3d7e46575cbf",
+      "name": "Send Messages",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3008,
+        3936
+      ],
+      "webhookId": "d67d18c9-c979-4959-85ed-151f4ce26c18",
+      "credentials": {
+        "telegramApi": {
+          "id": "kD2HfQISvIhuAg2t",
+          "name": "Sturgeon South Lot Manager"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// PLACEMENT ALGORITHM — Assign vehicles to slots\n// ============================================================\n\nconst input = $input.first().json;\nconst categorized = input.categorized || [];\nconst excluded = input.excluded || [];\n\n// --- SLOT DEFINITIONS ---\nconst CAGE_SLOTS = ['C01','C02','C03','C04','C05','C06','C07','C08','C09','C10','C11','C12','C13','C14','C15','C16','C17','C18','C19','C20'];\nconst FENCE_SLOTS = ['F1','F2','F3','F4','F5'];\nconst LEFT_SLOTS = ['L1','L2','L3','L4','L5'];\n\n// --- INITIALIZE PLACEMENT MAP ---\nconst placementMap = [];\nconst assignedVINs = new Set();\n\n// Helper: Create empty slot entry\nfunction emptySlot(zone, slot) {\n  return {\n    zone,\n    slot,\n    vin: '',\n    year: '',\n    make: '',\n    model: '',\n    color: '',\n    bodyType: '',\n    category: '',\n    status: '',\n    assigned: '',\n    notes: '',\n    destinationZone: ''\n  };\n}\n\n// Helper: Create filled slot entry\nfunction fillSlot(zone, slot, vehicle, notes = '', destZone = '') {\n  assignedVINs.add(vehicle.vin);\n  return {\n    zone,\n    slot,\n    vin: vehicle.vin,\n    year: vehicle.year,\n    make: vehicle.make,\n    model: vehicle.model,\n    color: vehicle.color,\n    bodyType: vehicle.bodyType,\n    category: vehicle.category,\n    status: vehicle.status,  // Original Airtable INVENTORY STATUS\n    assigned: new Date().toISOString(),\n    notes,\n    destinationZone: destZone\n  };\n}\n\n// Helper: Get available vehicles by category\nfunction getByCategory(cat) {\n  return categorized.filter(v => v.category === cat && !assignedVINs.has(v.vin));\n}\n\n// Helper: Sort vehicles by priority\nfunction sortByPriority(vehicles) {\n  return [...vehicles].sort((a, b) => {\n    // Brand priority (lower = better)\n    if (a.brandPriority !== b.brandPriority) return a.brandPriority - b.brandPriority;\n    // Type priority (lower = better)\n    if (a.typePriority !== b.typePriority) return a.typePriority - b.typePriority;\n    // Year (newer = better)\n    return b.year - a.year;\n  });\n}\n\n// ============================================================\n// PHASE 1: CAGE PLACEMENT\n// ============================================================\n\n// --- C01: NEW Compass/Wrangler only ---\nlet c01Vehicle = null;\nconst newVehicles = getByCategory('NEW');\nconst compassWrangler = newVehicles.filter(v => \n  v.model.toUpperCase().includes('COMPASS') || v.model.toUpperCase().includes('WRANGLER')\n);\nif (compassWrangler.length > 0) {\n  const sorted = sortByPriority(compassWrangler);\n  c01Vehicle = sorted[0];\n  placementMap.push(fillSlot('CAGE', 'C01', c01Vehicle));\n} else {\n  placementMap.push(emptySlot('CAGE', 'C01')); // Allow empty per rules\n}\n\n// --- C02-C03: NEW SUVs, no Durango ---\nconst c02c03Slots = ['C02', 'C03'];\nconst newSUVsNoDurango = getByCategory('NEW').filter(v => \n  v.bodyType === 'SUV' && !v.model.toUpperCase().includes('DURANGO')\n);\nconst sortedC02C03 = sortByPriority(newSUVsNoDurango);\n\nfor (let i = 0; i < c02c03Slots.length; i++) {\n  if (sortedC02C03[i]) {\n    placementMap.push(fillSlot('CAGE', c02c03Slots[i], sortedC02C03[i]));\n  } else {\n    // Fallback: VAN then TRUCK\n    const fallback = getByCategory('NEW').filter(v => \n      v.bodyType === 'VAN' || v.bodyType === 'TRUCK'\n    );\n    const sortedFallback = sortByPriority(fallback);\n    if (sortedFallback[0]) {\n      placementMap.push(fillSlot('CAGE', c02c03Slots[i], sortedFallback[0]));\n    } else {\n      placementMap.push(emptySlot('CAGE', c02c03Slots[i]));\n    }\n  }\n}\n\n// --- C04-C07: NEW vehicles, full hierarchy ---\nconst c04c07Slots = ['C04', 'C05', 'C06', 'C07'];\nconst remainingNew = sortByPriority(getByCategory('NEW'));\n\nfor (let i = 0; i < c04c07Slots.length; i++) {\n  if (remainingNew[i]) {\n    placementMap.push(fillSlot('CAGE', c04c07Slots[i], remainingNew[i]));\n  } else {\n    placementMap.push(emptySlot('CAGE', c04c07Slots[i]));\n  }\n}\n\n// --- C12-C13: Prefer trucks (NEW or FLR) ---\nconst c12c13Slots = ['C12', 'C13'];\nconst trucksForBack = sortByPriority([\n  ...getByCategory('NEW').filter(v => v.bodyType === 'TRUCK'),\n  ...getByCategory('FLR').filter(v => v.bodyType === 'TRUCK')\n]);\n\nfor (let i = 0; i < c12c13Slots.length; i++) {\n  if (trucksForBack[i]) {\n    placementMap.push(fillSlot('CAGE', c12c13Slots[i], trucksForBack[i]));\n  } else {\n    // Fallback to any NEW/FLR\n    const fallback = sortByPriority([...getByCategory('NEW'), ...getByCategory('FLR')]);\n    if (fallback[0]) {\n      placementMap.push(fillSlot('CAGE', c12c13Slots[i], fallback[0]));\n    } else {\n      placementMap.push(emptySlot('CAGE', c12c13Slots[i]));\n    }\n  }\n}\n\n// --- C08-C11, C14-C20: Remaining FLR/NEW ---\nconst remainderSlots = ['C08', 'C09', 'C10', 'C11', 'C14', 'C15', 'C16', 'C17', 'C18', 'C19', 'C20'];\nconst remainderVehicles = sortByPriority([\n  ...getByCategory('NEW'),\n  ...getByCategory('FLR')\n]);\n\nlet remainderIdx = 0;\nfor (const slot of remainderSlots) {\n  if (remainderVehicles[remainderIdx]) {\n    placementMap.push(fillSlot('CAGE', slot, remainderVehicles[remainderIdx]));\n    remainderIdx++;\n  } else {\n    placementMap.push(emptySlot('CAGE', slot));\n  }\n}\n\n// Track overflow from cage (FLR that didn't fit)\nconst cageOverflow = sortByPriority([...getByCategory('NEW'), ...getByCategory('FLR')]);\n\n// ============================================================\n// PHASE 2: FENCE PLACEMENT (SOLD > BND > FLR Sedan overflow)\n// ============================================================\n\nconst soldVehicles = sortByPriority(getByCategory('SOLD'));\nconst bndVehicles = sortByPriority(getByCategory('BND'));\nconst sedanOverflow = cageOverflow.filter(v => v.isSedan);\n\nlet fenceIdx = 0;\n\n// Fill SOLD first\nfor (const v of soldVehicles) {\n  if (fenceIdx < FENCE_SLOTS.length) {\n    placementMap.push(fillSlot('FENCE', FENCE_SLOTS[fenceIdx], v));\n    fenceIdx++;\n  }\n}\n\n// Then BND\nfor (const v of bndVehicles) {\n  if (fenceIdx < FENCE_SLOTS.length) {\n    placementMap.push(fillSlot('FENCE', FENCE_SLOTS[fenceIdx], v));\n    fenceIdx++;\n  }\n}\n\n// Then sedan overflow from cage\nfor (const v of sedanOverflow) {\n  if (fenceIdx < FENCE_SLOTS.length) {\n    placementMap.push(fillSlot('FENCE', FENCE_SLOTS[fenceIdx], v));\n    fenceIdx++;\n  }\n}\n\n// Fill remaining fence slots as empty\nwhile (fenceIdx < FENCE_SLOTS.length) {\n  placementMap.push(emptySlot('FENCE', FENCE_SLOTS[fenceIdx]));\n  fenceIdx++;\n}\n\n// Track fence overflow\nconst fenceOverflowSold = getByCategory('SOLD');\nconst fenceOverflowBND = getByCategory('BND');\n\n// ============================================================\n// PHASE 3: LEFT SIDE (BND overflow > RECON > SOLD overflow)\n// ============================================================\n\nconst reconVehicles = sortByPriority(getByCategory('RECON'));\n\nlet leftIdx = 0;\n\n// BND overflow first\nfor (const v of fenceOverflowBND) {\n  if (leftIdx < LEFT_SLOTS.length) {\n    placementMap.push(fillSlot('LEFT', LEFT_SLOTS[leftIdx], v));\n    leftIdx++;\n  }\n}\n\n// Then RECON\nfor (const v of reconVehicles) {\n  if (leftIdx < LEFT_SLOTS.length) {\n    placementMap.push(fillSlot('LEFT', LEFT_SLOTS[leftIdx], v));\n    leftIdx++;\n  }\n}\n\n// Then SOLD overflow\nfor (const v of fenceOverflowSold) {\n  if (leftIdx < LEFT_SLOTS.length) {\n    placementMap.push(fillSlot('LEFT', LEFT_SLOTS[leftIdx], v));\n    leftIdx++;\n  }\n}\n\n// Fill remaining left slots as empty\nwhile (leftIdx < LEFT_SLOTS.length) {\n  placementMap.push(emptySlot('LEFT', LEFT_SLOTS[leftIdx]));\n  leftIdx++;\n}\n\n// ============================================================\n// PHASE 4: LOOSE PARKING (everything that didn't fit)\n// ============================================================\n\nconst looseAssignments = [];\nlet looseIdx = 1;\n\n// All remaining unassigned vehicles go to loose parking\nconst allRemaining = categorized.filter(v => !assignedVINs.has(v.vin));\n\nfor (const v of allRemaining) {\n  // Determine where this vehicle SHOULD go\n  let destZone = 'CAGE';\n  if (v.category === 'SOLD') destZone = 'FENCE';\n  if (v.category === 'BND') destZone = 'FENCE';\n  if (v.category === 'RECON') destZone = 'LEFT SIDE';\n  \n  const looseEntry = fillSlot('LOOSE', `LP${looseIdx}`, v, `Belongs in ${destZone}`, destZone);\n  looseEntry.status = 'TEMPORARY';\n  placementMap.push(looseEntry);\n  looseAssignments.push({\n    slot: `LP${looseIdx}`,\n    vin: v.vin,\n    year: v.year,\n    make: v.make,\n    model: v.model,\n    color: v.color,\n    category: v.category,\n    bodyType: v.bodyType,\n    destinationZone: destZone\n  });\n  looseIdx++;\n}\n\n// ============================================================\n// BUILD SUMMARY\n// ============================================================\n\nconst cageFilled = placementMap.filter(p => p.zone === 'CAGE' && p.vin).length;\nconst fenceFilled = placementMap.filter(p => p.zone === 'FENCE' && p.vin).length;\nconst leftFilled = placementMap.filter(p => p.zone === 'LEFT' && p.vin).length;\nconst looseFilled = placementMap.filter(p => p.zone === 'LOOSE').length;\n\nconst summary = {\n  totalVehicles: categorized.length,\n  totalPlaced: assignedVINs.size,\n  cageFilled,\n  cageCapacity: 20,\n  fenceFilled,\n  fenceCapacity: 5,\n  leftFilled,\n  leftCapacity: 5,\n  looseFilled,\n  looseCapacity: 'unlimited',\n  byCategory: input.counts?.byCategory || {}\n};\n\nreturn [{\n  json: {\n    placementMap,\n    summary,\n    escalations: looseAssignments,\n    excluded\n  }\n}];"
+      },
+      "id": "3e3fb4c6-d9a6-4a53-a1b9-1907b55dfab7",
+      "name": "Run Placement Algorithm1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        3712
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "77957aea-564a-404a-bcae-13a96cf1a4f3",
+      "name": "Merge Schema + Rules",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        96,
+        3808
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// GENERIC RULE ENGINE PARSER\n// Phase 1: Load and structure the schema\n// Phase 2: Parse and validate rules against schema\n// Phase 3: Compile into structured config for downstream nodes\n// ============================================================\n\nconst schemaRows = $('Read Schema1').all().map(i => i.json);\nconst rulesRows = $('Read Rules1').all().map(i => i.json);\n\n// ============================================================\n// PHASE 1: BUILD SCHEMA REGISTRY\n// ============================================================\n\nfunction buildSchema(rows) {\n  const schema = {};\n  \n  for (const row of rows) {\n    const ruleType = (row['Rule_Type'] || '').toString().trim().toUpperCase();\n    const param = (row['Parameter'] || '').toString().trim().toLowerCase();\n    const position = parseInt(row['Param_Position']) || 1;\n    const dataType = (row['Data_Type'] || 'string').toString().trim().toLowerCase();\n    const required = (row['Required'] || '').toString().toUpperCase() === 'TRUE';\n    const validValues = row['Valid_Values'] \n      ? row['Valid_Values'].toString().split(',').map(v => v.trim().toUpperCase())\n      : null;\n    const defaultVal = row['Default'] !== undefined && row['Default'] !== '' \n      ? row['Default'].toString() \n      : null;\n    const description = (row['Description'] || '').toString();\n    \n    if (!ruleType || !param) continue;\n    \n    if (!schema[ruleType]) {\n      schema[ruleType] = { params: {}, paramOrder: [] };\n    }\n    \n    schema[ruleType].params[param] = {\n      position,\n      dataType,\n      required,\n      validValues,\n      default: defaultVal,\n      description\n    };\n    \n    schema[ruleType].paramOrder.push({ name: param, position });\n  }\n  \n  // Sort params by position for each rule type\n  for (const ruleType in schema) {\n    schema[ruleType].paramOrder.sort((a, b) => a.position - b.position);\n  }\n  \n  return schema;\n}\n\n// ============================================================\n// PHASE 2: PARSE AND VALIDATE RULES\n// ============================================================\n\nfunction parseValue(value, dataType) {\n  const v = (value !== undefined && value !== null) ? value.toString().trim() : '';\n  \n  switch (dataType) {\n    case 'integer':\n      const intVal = parseInt(v);\n      return isNaN(intVal) ? null : intVal;\n    case 'boolean':\n      return v.toUpperCase() === 'TRUE';\n    case 'enum':\n    case 'string':\n    case 'field_name':\n    case 'slot_range':\n    case 'any':\n    default:\n      return v;\n  }\n}\n\nfunction validateAndParseRules(rows, schema) {\n  const parsed = [];\n  const errors = [];\n  const warnings = [];\n  \n  for (const row of rows) {\n    const ruleId = (row['Rule_ID'] || '').toString().trim();\n    const ruleType = (row['Rule_Type'] || '').toString().trim().toUpperCase();\n    const enabled = (row['Enabled'] || '').toString().toUpperCase();\n    const notes = (row['Notes'] || '').toString().trim();\n    \n    // Skip disabled rules\n    if (enabled !== 'TRUE' && enabled !== true) {\n      continue;\n    }\n    \n    // Skip empty rows\n    if (!ruleId || !ruleType) {\n      continue;\n    }\n    \n    // Validate rule type exists in schema\n    if (!schema[ruleType]) {\n      errors.push({\n        ruleId,\n        error: `Unknown rule type: ${ruleType}`,\n        suggestion: `Valid types: ${Object.keys(schema).join(', ')}`\n      });\n      continue;\n    }\n    \n    const ruleSchema = schema[ruleType];\n    const params = {};\n    const ruleErrors = [];\n    \n    // Extract parameters from Param_1 through Param_5 based on schema position\n    for (const paramDef of ruleSchema.paramOrder) {\n      const paramName = paramDef.name;\n      const paramConfig = ruleSchema.params[paramName];\n      const colName = `Param_${paramConfig.position}`;\n      const rawValue = row[colName];\n      \n      // Check required\n      if (paramConfig.required && (rawValue === undefined || rawValue === null || rawValue === '')) {\n        if (paramConfig.default !== null) {\n          params[paramName] = parseValue(paramConfig.default, paramConfig.dataType);\n        } else {\n          ruleErrors.push(`Missing required parameter: ${paramName} (${colName})`);\n        }\n        continue;\n      }\n      \n      // Parse value\n      const parsedValue = parseValue(rawValue, paramConfig.dataType);\n      \n      // Validate against valid_values if defined (for enum types)\n      if (paramConfig.validValues && parsedValue !== '' && parsedValue !== null) {\n        const upperValue = parsedValue.toString().toUpperCase();\n        // For comma-separated values, check each one\n        const valuesToCheck = upperValue.includes(',') \n          ? upperValue.split(',').map(v => v.trim())\n          : [upperValue];\n        \n        for (const v of valuesToCheck) {\n          if (v && !paramConfig.validValues.includes(v) && !paramConfig.validValues.includes('*')) {\n            warnings.push({\n              ruleId,\n              warning: `Value '${v}' for ${paramName} not in valid_values list`,\n              validValues: paramConfig.validValues\n            });\n          }\n        }\n      }\n      \n      params[paramName] = parsedValue;\n    }\n    \n    if (ruleErrors.length > 0) {\n      errors.push({ ruleId, ruleType, errors: ruleErrors });\n      continue;\n    }\n    \n    parsed.push({\n      id: ruleId,\n      type: ruleType,\n      params,\n      notes,\n      _raw: row\n    });\n  }\n  \n  return { parsed, errors, warnings };\n}\n\n// ============================================================\n// PHASE 3: COMPILE INTO STRUCTURED CONFIG\n// ============================================================\n\nfunction compileRules(parsedRules) {\n  const compiled = {\n    // Legacy format (for backward compatibility)\n    general: {},\n    statusMap: {},\n    statusOverrides: [],\n    brandPriority: {},\n    defaultBrandPriority: 5,\n    bodyTypeMap: {},\n    bodyTypePriority: {},\n    cageSlotRules: [],\n    fenceRules: [],\n    leftRules: [],\n    overflowRules: {},\n    \n    // New structured format\n    categoryAssign: [],\n    categoryOverride: [],\n    slotConstraints: [],\n    zonePriority: { FENCE: [], LEFT: [] },\n    sortRules: [],\n    valueMaps: {}\n  };\n  \n  for (const rule of parsedRules) {\n    const p = rule.params;\n    \n    switch (rule.type) {\n      // --------------------------------------------------------\n      // GENERAL SETTINGS\n      // --------------------------------------------------------\n      case 'GENERAL_SETTING':\n        const settingName = p.setting_name;\n        let settingValue = p.value;\n        \n        // Parse based on data_type hint\n        if (p.data_type === 'integer') {\n          settingValue = parseInt(settingValue) || 0;\n        } else if (p.data_type === 'boolean') {\n          settingValue = settingValue.toString().toUpperCase() === 'TRUE';\n        }\n        \n        compiled.general[settingName] = settingValue;\n        break;\n      \n      // --------------------------------------------------------\n      // CATEGORY ASSIGNMENT\n      // --------------------------------------------------------\n      case 'CATEGORY_ASSIGN':\n        const catRule = {\n          id: rule.id,\n          sourceField: p.source_field,\n          operator: p.operator,\n          threshold: p.threshold,\n          outputCategory: p.output_category.toUpperCase(),\n          priority: parseInt(p.priority) || 100\n        };\n        compiled.categoryAssign.push(catRule);\n        \n        // Also populate legacy statusMap for backward compatibility\n        if (p.source_field === 'STATUS' && p.operator === '=') {\n          compiled.statusMap[p.threshold.toUpperCase()] = p.output_category.toUpperCase();\n        }\n        break;\n      \n      // --------------------------------------------------------\n      // CATEGORY OVERRIDE\n      // --------------------------------------------------------\n      case 'CATEGORY_OVERRIDE':\n        const overrideRule = {\n          id: rule.id,\n          fromCategory: p.from_category.toUpperCase(),\n          whenStatus: p.when_status.toUpperCase(),\n          toCategory: p.to_category.toUpperCase(),\n          priority: parseInt(p.priority) || 100\n        };\n        compiled.categoryOverride.push(overrideRule);\n        compiled.statusOverrides.push(overrideRule); // Legacy alias\n        break;\n      \n      // --------------------------------------------------------\n      // VALUE MAPS\n      // --------------------------------------------------------\n      case 'VALUE_MAP':\n        const mapName = p.map_name.toUpperCase();\n        const inputVal = p.input_value.toUpperCase();\n        const outputVal = p.output_value;\n        \n        if (!compiled.valueMaps[mapName]) {\n          compiled.valueMaps[mapName] = {};\n        }\n        compiled.valueMaps[mapName][inputVal] = outputVal;\n        \n        // Populate legacy structures for backward compatibility\n        switch (mapName) {\n          case 'BRAND_PRIORITY':\n            if (inputVal === '*') {\n              compiled.defaultBrandPriority = parseInt(outputVal) || 5;\n            } else {\n              compiled.brandPriority[inputVal] = parseInt(outputVal) || 5;\n            }\n            break;\n          case 'BODY_TYPE_NORM':\n            compiled.bodyTypeMap[inputVal] = outputVal.toUpperCase();\n            break;\n          case 'BODY_TYPE_PRIORITY':\n            compiled.bodyTypePriority[inputVal] = parseInt(outputVal) || 5;\n            break;\n        }\n        break;\n      \n      // --------------------------------------------------------\n      // SLOT CONSTRAINTS\n      // --------------------------------------------------------\n      case 'SLOT_CONSTRAINT':\n        const slotRule = {\n          id: rule.id,\n          slots: p.slots,\n          constraintType: p.constraint_type.toUpperCase(),\n          value: p.value,\n          priority: parseInt(p.priority) || 100\n        };\n        compiled.slotConstraints.push(slotRule);\n        \n        // Also populate legacy cageSlotRules\n        compiled.cageSlotRules.push({\n          slots: p.slots,\n          ruleType: p.constraint_type.toUpperCase(),\n          ruleValue: p.value\n        });\n        break;\n      \n      // --------------------------------------------------------\n      // ZONE PRIORITY\n      // --------------------------------------------------------\n      case 'ZONE_PRIORITY':\n        const zone = p.zone.toUpperCase();\n        const zonePriorityRule = {\n          id: rule.id,\n          fillOrder: parseInt(p.fill_order) || 99,\n          category: p.category.toUpperCase(),\n          notes: p.notes || ''\n        };\n        \n        if (zone === 'FENCE') {\n          compiled.zonePriority.FENCE.push(zonePriorityRule);\n          compiled.fenceRules.push({ priority: zonePriorityRule.fillOrder, category: zonePriorityRule.category });\n        } else if (zone === 'LEFT') {\n          compiled.zonePriority.LEFT.push(zonePriorityRule);\n          compiled.leftRules.push({ priority: zonePriorityRule.fillOrder, category: zonePriorityRule.category });\n        }\n        break;\n      \n      // --------------------------------------------------------\n      // SORT RULES\n      // --------------------------------------------------------\n      case 'SORT_RULE':\n        compiled.sortRules.push({\n          id: rule.id,\n          field: p.field.toUpperCase(),\n          direction: p.direction.toUpperCase(),\n          order: parseInt(p.sort_order) || 99,\n          notes: p.notes || ''\n        });\n        break;\n      \n      // --------------------------------------------------------\n      // OVERFLOW RULES\n      // --------------------------------------------------------\n      case 'OVERFLOW_RULE':\n        let ovfValue = p.value;\n        if (ovfValue.toUpperCase() === 'TRUE') ovfValue = true;\n        else if (ovfValue.toUpperCase() === 'FALSE') ovfValue = false;\n        compiled.overflowRules[p.rule_name] = ovfValue;\n        break;\n    }\n  }\n  \n  // Sort arrays that need ordering\n  compiled.categoryAssign.sort((a, b) => a.priority - b.priority);\n  compiled.categoryOverride.sort((a, b) => a.priority - b.priority);\n  compiled.statusOverrides.sort((a, b) => a.priority - b.priority);\n  compiled.slotConstraints.sort((a, b) => a.priority - b.priority);\n  compiled.sortRules.sort((a, b) => a.order - b.order);\n  compiled.zonePriority.FENCE.sort((a, b) => a.fillOrder - b.fillOrder);\n  compiled.zonePriority.LEFT.sort((a, b) => a.fillOrder - b.fillOrder);\n  compiled.fenceRules.sort((a, b) => a.priority - b.priority);\n  compiled.leftRules.sort((a, b) => a.priority - b.priority);\n  \n  return compiled;\n}\n\n// ============================================================\n// EXECUTE\n// ============================================================\n\nconst schema = buildSchema(schemaRows);\nconst { parsed, errors, warnings } = validateAndParseRules(rulesRows, schema);\nconst rules = compileRules(parsed);\n\n// Build summary\nconst summary = {\n  totalSchemaRuleTypes: Object.keys(schema).length,\n  totalRulesProcessed: parsed.length,\n  totalErrors: errors.length,\n  totalWarnings: warnings.length,\n  ruleCountByType: {}\n};\n\nfor (const rule of parsed) {\n  summary.ruleCountByType[rule.type] = (summary.ruleCountByType[rule.type] || 0) + 1;\n}\n\nreturn [{\n  json: {\n    rules,\n    schema,\n    validation: {\n      errors,\n      warnings,\n      isValid: errors.length === 0\n    },\n    summary,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "87973bd0-e63a-44aa-a243-39a802082872",
+      "name": "Generic Rule Parser",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        3808
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "validation-check",
+              "leftValue": "={{ $json.validation.isValid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3e559c53-6470-4fcf-9bf6-a1c1f45c3233",
+      "name": "Validation Gate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        544,
+        3808
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pass through validated rules for downstream consumption\n// This node exists for clarity and to allow easy insertion of additional processing\n\nconst input = $input.first().json;\n\n// Output format matches what Categorize Vehicles2 expects\nreturn [{\n  json: {\n    rules: input.rules,\n    summary: input.summary,\n    timestamp: input.timestamp\n  }\n}];"
+      },
+      "id": "cf63624b-5d9d-4b60-937f-820e0b874570",
+      "name": "Output Rules",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        3712
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle validation errors - send alert and abort\n\nconst input = $input.first().json;\nconst errors = input.validation.errors;\nconst warnings = input.validation.warnings;\n\nlet errorMessage = `⚠️ RULE ENGINE VALIDATION FAILED\\n\\n`;\nerrorMessage += `${errors.length} error(s) found:\\n\\n`;\n\nfor (const err of errors) {\n  errorMessage += `• Rule ${err.ruleId}: ${err.error || err.errors?.join(', ')}\\n`;\n  if (err.suggestion) {\n    errorMessage += `  → ${err.suggestion}\\n`;\n  }\n}\n\nif (warnings.length > 0) {\n  errorMessage += `\\n${warnings.length} warning(s):\\n`;\n  for (const warn of warnings) {\n    errorMessage += `• Rule ${warn.ruleId}: ${warn.warning}\\n`;\n  }\n}\n\nerrorMessage += `\\nFix these issues in the 'rules' sheet and re-run.`;\n\nreturn [{\n  json: {\n    telegramMessage: errorMessage,\n    errors,\n    warnings,\n    abortRun: true\n  }\n}];"
+      },
+      "id": "686dabd8-2ea2-40d5-b110-ae716731ea44",
+      "name": "Handle Validation Errors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        3904
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs",
+          "mode": "list",
+          "cachedResultName": "lot-placement-engine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1306172711,
+          "mode": "list",
+          "cachedResultName": "rule_schema",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs/edit#gid=1306172711"
+        },
+        "options": {}
+      },
+      "id": "7f4dada7-00ef-43c3-8517-55163aed962e",
+      "name": "Read Schema1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -128,
+        3712
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "z3AMPbAtQvtv0b2S",
+          "name": "thealexbitar google sheets"
+        }
+      },
+      "notes": "point to your rule_schema sheet tab"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs",
+          "mode": "list",
+          "cachedResultName": "lot-placement-engine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 225626766,
+          "mode": "list",
+          "cachedResultName": "rules",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14_D8ldZIxuwUPZkEm830TUQ0JsKLurqAk0Pb3Lq8cLs/edit#gid=225626766"
+        },
+        "options": {}
+      },
+      "id": "50bfeba9-5c1b-4153-97f0-4a14eef7b396",
+      "name": "Read Rules1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -128,
+        3904
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "z3AMPbAtQvtv0b2S",
+          "name": "thealexbitar google sheets"
+        }
+      },
+      "notes": "point to your rules sheet tab"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// CATEGORIZE VEHICLES — Fixed Field Names\n// ============================================================\n\n// Pull rules from the parser node\nconst rulesInput = $('Generic Rule Parser').first().json;\nconst rules = rulesInput.rules || rulesInput;\n\n// Pull vehicles from Airtable node\nconst vehiclesRaw = $('Airtable: Pull Verified Vehicles1').all().map(item => item.json);\n\n// --- VALUE MAPS ---\nconst brandPriority = {};\nconst bodyTypeNorm = {};\nconst bodyTypePriority = {};\n\nif (rules.valueMaps) {\n  if (rules.valueMaps.BRAND_PRIORITY) {\n    Object.assign(brandPriority, rules.valueMaps.BRAND_PRIORITY);\n  }\n  if (rules.valueMaps.BODY_TYPE_NORM) {\n    Object.assign(bodyTypeNorm, rules.valueMaps.BODY_TYPE_NORM);\n  }\n  if (rules.valueMaps.BODY_TYPE_PRIORITY) {\n    Object.assign(bodyTypePriority, rules.valueMaps.BODY_TYPE_PRIORITY);\n  }\n}\n\nconst defaultBrandPriority = parseInt(brandPriority['*']) || 99;\nconst defaultBodyTypePriority = 99;\n\n// --- GENERAL SETTINGS ---\nconst newKmThreshold = parseInt(rules.general?.NEW_KM_THRESHOLD) || 1000;\n\n// --- CATEGORY ASSIGNMENT RULES ---\nconst categoryAssignRules = (rules.categoryAssign || []).sort((a, b) => (a.priority || 99) - (b.priority || 99));\n\n// --- CATEGORY OVERRIDES ---\n// --- CATEGORY OVERRIDES ---\nconst categoryOverrides = rules.categoryOverride || [\n  { fromCategory: 'NEW', whenStatus: 'BOOKED | NOT DELIVERED', toCategory: 'BND' },\n  { fromCategory: 'NEW', whenStatus: 'SIGNED DEAL', toCategory: 'SOLD' },\n  { fromCategory: 'NEW', whenStatus: 'IN RECON', toCategory: 'RECON' },\n  { fromCategory: 'NEW', whenStatus: 'VOID | IN STOCK', toCategory: 'FLR' }\n];\n\n// --- HELPER: Evaluate condition ---\nfunction evaluateCondition(vehicle, rule) {\n  // FIXED: Use correct field names from rule structure\n  const field = (rule.sourceField || rule.field || '').toUpperCase();\n  const operator = rule.operator || '=';\n  const value = rule.threshold || rule.value || '';\n  \n  let vehicleValue;\n  switch (field) {\n    case 'KM': vehicleValue = parseInt(vehicle.km) || 0; break;\n    case 'STATUS': vehicleValue = vehicle.inventoryStatus?.toUpperCase() || ''; break;\n    case 'MAKE': vehicleValue = vehicle.make?.toUpperCase() || ''; break;\n    case 'MODEL': vehicleValue = vehicle.model?.toUpperCase() || ''; break;\n    case 'YEAR': vehicleValue = parseInt(vehicle.year) || 0; break;\n    case 'TYPE': vehicleValue = vehicle.bodyType?.toUpperCase() || ''; break;\n    default: return false;\n  }\n  \n  // Numeric comparisons\n  if (field === 'KM' || field === 'YEAR') {\n    const numValue = parseFloat(value);\n    switch (operator) {\n      case '<=': return vehicleValue <= numValue;\n      case '>=': return vehicleValue >= numValue;\n      case '<': return vehicleValue < numValue;\n      case '>': return vehicleValue > numValue;\n      case '=': return vehicleValue === numValue;\n      case '!=': return vehicleValue !== numValue;\n    }\n  }\n  \n  // String comparisons\n  const compareValue = String(value).toUpperCase();\n  switch (operator) {\n    case '=': return vehicleValue === compareValue;\n    case '!=': return vehicleValue !== compareValue;\n    case 'IN': return compareValue.split(',').map(s => s.trim()).includes(vehicleValue);\n    case 'NOT_IN': return !compareValue.split(',').map(s => s.trim()).includes(vehicleValue);\n    default: return vehicleValue === compareValue;\n  }\n}\n\n// --- HELPER: Assign category based on rules ---\nfunction assignCategory(vehicle) {\n  for (const rule of categoryAssignRules) {\n    if (evaluateCondition(vehicle, rule)) {\n      // FIXED: Use correct field name\n      return rule.outputCategory || rule.category;\n    }\n  }\n  return null;\n}\n\n// --- HELPER: Apply overrides ---\nfunction applyOverrides(category, vehicle) {\n  for (const override of categoryOverrides) {\n    if (category === override.fromCategory) {\n      const statusMatch = vehicle.inventoryStatus?.toUpperCase() === override.whenStatus?.toUpperCase();\n      if (statusMatch) {\n        return override.toCategory;\n      }\n    }\n  }\n  return category;\n}\n\n// --- PROCESS VEHICLES ---\nconst categorized = [];\nconst excluded = [];\n\nfor (const raw of vehiclesRaw) {\n  const vin = raw['V.I.N.'] || raw.VIN || raw.vin || '';\n  const make = raw.MAKE || raw.make || '';\n  const model = raw.MODEL || raw.model || '';\n  const year = parseInt(raw.YEAR || raw.year) || 0;\n  const color = raw.COLOUR || raw.COLOR || raw.colour || raw.color || '';\n  const km = parseInt(raw.KM || raw.km) || 0;\n  const rawType = (raw.TYPE || raw.type || '').toUpperCase();\n  const inventoryStatus = raw['INVENTORY STATUS'] || raw.INVENTORY_STATUS || '';\n  \n  // Validate required fields\n  if (!vin || !make || !model) {\n    excluded.push({ vin: vin || 'UNKNOWN', reason: 'Missing required fields (VIN, make, or model)', raw });\n    continue;\n  }\n  \n  // Normalize body type\n  let bodyType = rawType;\n  if (bodyTypeNorm[rawType]) {\n    bodyType = typeof bodyTypeNorm[rawType] === 'object' \n      ? bodyTypeNorm[rawType].output || rawType \n      : bodyTypeNorm[rawType];\n  }\n  bodyType = bodyType || 'UNKNOWN';\n  \n  // Get brand priority\n  let bPriority = brandPriority[make.toUpperCase()];\n  if (bPriority === undefined) bPriority = defaultBrandPriority;\n  bPriority = parseInt(bPriority) || defaultBrandPriority;\n  \n  // Get type priority\n  let tPriority = bodyTypePriority[bodyType];\n  if (tPriority === undefined) tPriority = defaultBodyTypePriority;\n  tPriority = parseInt(tPriority) || defaultBodyTypePriority;\n  \n  // Build vehicle object for rule evaluation\n  const vehicle = {\n    vin,\n    make,\n    model,\n    year,\n    color,\n    km,\n    bodyType,\n    inventoryStatus,\n    isTruck: bodyType === 'TRUCK',\n    isSedan: bodyType === 'SEDAN',\n    brandPriority: bPriority,\n    typePriority: tPriority\n  };\n  \n  // Assign category using rules\n  let category = assignCategory(vehicle);\n  \n  if (!category) {\n    excluded.push({ vin, reason: 'No matching category rule', vehicle });\n    continue;\n  }\n  \n  // Apply overrides (e.g., NEW + BND status → BND)\n  category = applyOverrides(category, vehicle);\n  \n  // Final categorized vehicle\n  categorized.push({\n    vin,\n    make,\n    model,\n    year,\n    color,\n    km,\n    bodyType,\n    category,\n    status: inventoryStatus,  // Direct passthrough from Airtable\n    brandPriority: vehicle.brandPriority,\n    typePriority: vehicle.typePriority,\n    isTruck: vehicle.isTruck,\n    isSedan: vehicle.isSedan\n  });\n}\n\n// --- COUNT BY CATEGORY ---\nconst byCategory = {};\nfor (const v of categorized) {\n  byCategory[v.category] = (byCategory[v.category] || 0) + 1;\n}\n\nreturn [{\n  json: {\n    categorized,\n    excluded,\n    counts: {\n      total: vehiclesRaw.length,\n      categorized: categorized.length,\n      excluded: excluded.length,\n      byCategory\n    }\n  }\n}];"
+      },
+      "id": "42296bc3-a1fb-4623-81b3-720c7b30cc68",
+      "name": "Categorize Vehicles2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        3712
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ─── Placement Map → HTML Generator ───\n// Accepts dynamic items from GSheets node and produces styled HTML\n\nconst items = $input.all();\n\n// ── Color Maps ──\nconst zoneColors = {\n  'CAGE':  '#e2efda',\n  'FENCE': '#fff2cc',\n  'LEFT':  '#fce4ec',\n  'LOOSE': '#e8eaf6'\n};\n\nconst categoryColors = {\n  'NEW':   { bg: '#92d050', color: '#000000', bold: true },\n  'FLR':   { bg: '#5b9bd5', color: '#000000', bold: true },\n  'SOLD':  { bg: '#ff5050', color: '#ffffff', bold: true },\n  'BND':   { bg: '#ffc000', color: '#000000', bold: true },\n  'RECON': { bg: '#a6a6a6', color: '#000000', bold: true }\n};\n\nconst columns = ['Zone','Slot','VIN','Year','Make','Model','Color','Body Type','Category','Status','Assigned','Notes'];\n\n// ── Format date ──\nfunction fmtDate(val) {\n  if (!val) return '';\n  try {\n    const d = new Date(val);\n    if (isNaN(d.getTime())) return String(val);\n    return d.toLocaleDateString('en-CA', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false });\n  } catch { return String(val); }\n}\n\n// ── Build rows ──\nlet rows = '';\nfor (const item of items) {\n  const data = item.json;\n  const zone = (data.Zone || '').toString().trim().toUpperCase();\n  const category = (data.Category || '').toString().trim().toUpperCase();\n  const rowBg = zoneColors[zone] || '#ffffff';\n  const catStyle = categoryColors[category];\n\n  rows += '<tr>';\n  for (const col of columns) {\n    let val = data[col] !== undefined && data[col] !== null ? String(data[col]) : '';\n    let cellBg = rowBg;\n    let cellColor = '#000000';\n    let fontWeight = 'normal';\n\n    if (col === 'Assigned') val = fmtDate(val);\n\n    if (col === 'Category' && catStyle) {\n      cellBg = catStyle.bg;\n      cellColor = catStyle.color;\n      fontWeight = 'bold';\n    }\n\n    rows += `<td style=\"background:${cellBg};color:${cellColor};font-weight:${fontWeight};border:1px solid #000;padding:4px 6px;text-align:center;font-size:9pt;font-family:Arial,sans-serif;white-space:nowrap;\">${val}</td>`;\n  }\n  rows += '</tr>';\n}\n\n// ── Header ──\nlet header = '<tr>';\nfor (const col of columns) {\n  header += `<td style=\"background:#2f5496;color:#ffffff;font-weight:bold;border:1px solid #000;padding:6px 8px;text-align:center;font-size:10pt;font-family:Arial,sans-serif;\">${col}</td>`;\n}\nheader += '</tr>';\n\n// ── Timestamp ──\nconst now = new Date().toLocaleString('en-CA', { timeZone: 'America/Edmonton' });\n\n// ── Full HTML ──\nconst html = `<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"><title>Placement Map</title>\n<style>\n  @page { size: A4 landscape; margin: 12mm; }\n  body { margin: 0; font-family: Arial, sans-serif; }\n  h2 { text-align: center; color: #2f5496; margin: 8px 0 4px 0; font-size: 14pt; }\n  .meta { text-align: center; font-size: 8pt; color: #666; margin-bottom: 10px; }\n  table { border-collapse: collapse; width: 100%; }\n</style>\n</head><body>\n<h2>Lot Placement Map</h2>\n<div class=\"meta\">Generated: ${now}</div>\n<table>${header}${rows}</table>\n</body></html>`;\n\nreturn [{ json: { html }, binary: {} }];"
+      },
+      "id": "ef36bbea-f74d-4ac9-8ff6-4ee0086ea8d4",
+      "name": "Code: Generate Placement HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2784,
+        3616
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "7932435045",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "=📋 Lot Placement Map\n📅 {{ $now.format('yyyy-MM-dd HH:mm') }}"
+        }
+      },
+      "id": "77c6c384-8bc9-4c9b-840e-1e45b323766b",
+      "name": "Telegram: Send Placement PDF",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3232,
+        3616
+      ],
+      "webhookId": "725d76df-0f0f-4df8-887b-0f75ae3364b5",
+      "credentials": {
+        "telegramApi": {
+          "id": "kD2HfQISvIhuAg2t",
+          "name": "Sturgeon South Lot Manager"
+        }
+      },
+      "notes": "Sends the PDF to your Telegram chat.\n\nSetup:\n1. Replace TELEGRAM_CHAT_ID env var or hardcode your chat ID\n2. Update the credential reference to your existing Telegram Bot credential"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ─── Converts HTML string to binary for Gotenberg ───\nconst htmlContent = $input.first().json.html;\nconst binaryData = Buffer.from(htmlContent, 'utf-8');\n\nreturn [{\n  json: {},\n  binary: {\n    data: await this.helpers.prepareBinaryData(\n      binaryData,\n      'Lot-map.html',\n      'text/html'\n    )\n  }\n}];"
+      },
+      "id": "388ce699-a10b-4355-9209-de8dbc4ec224",
+      "name": "Code: HTML to Binary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3008,
+        3616
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "7932435045",
+        "text": "={{ $json.telegramMessage }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "4b08d477-9185-4480-a0cc-e3a38e80cd20",
+      "name": "Send Messages1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        992,
+        3904
+      ],
+      "webhookId": "d67d18c9-c979-4959-85ed-151f4ce26c18",
+      "credentials": {
+        "telegramApi": {
+          "id": "kD2HfQISvIhuAg2t",
+          "name": "Sturgeon South Lot Manager"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Airtable: Pull Verified Vehicles1": {
+      "main": [
+        [
+          {
+            "node": "NEW Vehicles",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "USED Vehicles1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NEW Vehicles": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "USED Vehicles1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Categorize Vehicles2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform: Flatten Rows2": {
+      "main": [
+        [
+          {
+            "node": "GSheets: Write Placement Map2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Telegram Messages2": {
+      "main": [
+        [
+          {
+            "node": "Send Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GSheets: Clear Placement Map2": {
+      "main": [
+        [
+          {
+            "node": "Transform: Flatten Rows2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GSheets: Write Placement Map2": {
+      "main": [
+        [
+          {
+            "node": "Build Telegram Messages2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code: Generate Placement HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Build Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Run Placement1": {
+      "main": [
+        [
+          {
+            "node": "Read Schema1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Rules1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Webhook Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Messages": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Run Placement Algorithm1": {
+      "main": [
+        [
+          {
+            "node": "GSheets: Clear Placement Map2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Schema + Rules": {
+      "main": [
+        [
+          {
+            "node": "Generic Rule Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generic Rule Parser": {
+      "main": [
+        [
+          {
+            "node": "Validation Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation Gate": {
+      "main": [
+        [
+          {
+            "node": "Output Rules",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Rules": {
+      "main": [
+        [
+          {
+            "node": "Airtable: Pull Verified Vehicles1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Validation Errors": {
+      "main": [
+        [
+          {
+            "node": "Send Messages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Schema1": {
+      "main": [
+        [
+          {
+            "node": "Merge Schema + Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Rules1": {
+      "main": [
+        [
+          {
+            "node": "Merge Schema + Rules",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Categorize Vehicles2": {
+      "main": [
+        [
+          {
+            "node": "Run Placement Algorithm1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate Placement HTML": {
+      "main": [
+        [
+          {
+            "node": "Code: HTML to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: HTML to Binary": {
+      "main": [
+        [
+          {
+            "node": "Telegram: Send Placement PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f3edaf83da389a15e6499035732348a444f5651482c9adf24450d168cfc6721d"
+  }
+}
