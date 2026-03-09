@@ -2,6 +2,7 @@
   "project": "Sturgeon Dodge Edmonton Office Lot Operations SOP",
   "schema_version": "1.0",
   "last_updated": "2026-03-09",
+  "_phase_3b_session_note": "complete — all 12 trees verified, report written",
   "_phase_3a_session_note": "in_progress — files 1-5 being created this session per Prompt-1.md",
   "notes": "State file shared across all sessions. Each prompt reads this file to verify prerequisites and writes to it upon completion. Do not edit manually unless resetting a phase.",
 
@@ -176,9 +177,9 @@
 
     "phase_3b": {
       "label": "Decision Trees 14-25 (Operational, Personnel, Compliance)",
-      "status": "pending",
-      "started_at": null,
-      "completed_at": null,
+      "status": "complete",
+      "started_at": "2026-03-09",
+      "completed_at": "2026-03-09",
       "files_expected": [
         "systems-analysis/decision-trees/vehicle-auction-routing.md",
         "systems-analysis/decision-trees/vehicle-non-prime-identification.md",
@@ -193,13 +194,46 @@
         "systems-analysis/decision-trees/morning-lot-walk.md",
         "systems-analysis/decision-trees/accountability-agreement-onboarding.md"
       ],
-      "files_confirmed_created": [],
-      "quality_gates_passed": false,
-      "needs_input_items": [],
-      "ambiguous_items": [],
+      "files_confirmed_created": [
+        "systems-analysis/decision-trees/vehicle-auction-routing.md",
+        "systems-analysis/decision-trees/vehicle-non-prime-identification.md",
+        "systems-analysis/decision-trees/vehicle-seasonal-power-sport.md",
+        "systems-analysis/decision-trees/vehicle-status-unknown.md",
+        "systems-analysis/decision-trees/key-plate-sign-out.md",
+        "systems-analysis/decision-trees/key-plate-sign-in.md",
+        "systems-analysis/decision-trees/key-plate-lost-response.md",
+        "systems-analysis/decision-trees/staff-parking-new-employee.md",
+        "systems-analysis/decision-trees/staff-parking-repeat-violation.md",
+        "systems-analysis/decision-trees/sold-sign-missing-enforcement.md",
+        "systems-analysis/decision-trees/morning-lot-walk.md",
+        "systems-analysis/decision-trees/accountability-agreement-onboarding.md",
+        "systems-analysis/decision-trees/_PHASE_3B_REPORT.md"
+      ],
+      "quality_gates_passed": true,
+      "needs_input_items": [
+        "vehicle-auction-routing.md: Exact Airtable field/value used to mark auction-bound vehicles",
+        "vehicle-non-prime-identification.md: Exact transport arrangement process for routing vehicle to AB | STURGEON DODGE — who arranges transport, lead time, who receives at Sturgeon Dodge",
+        "vehicle-seasonal-power-sport.md: Exact capacity of Power Sport / Quad Corner — number of units that can be staged before last usable exit position is reached",
+        "vehicle-status-unknown.md: Whether an extended-stay customer vehicle creates financial liability or notification requirement",
+        "key-plate-sign-out.md: Escalation path when all dealer plates are simultaneously signed out",
+        "key-plate-lost-response.md: Exact contact and process for replacing a lost dealer plate",
+        "key-plate-lost-response.md: Exact key replacement costs by vehicle model",
+        "staff-parking-new-employee.md: Protocol for existing employees (who knew the rule) parking on lot for first time",
+        "staff-parking-repeat-violation.md: Specific management consequences after repeat violation pattern is escalated",
+        "sold-sign-missing-enforcement.md: Formal escalation action and consequence after Strike 3 fails",
+        "morning-lot-walk.md: Service Department Lead contact information",
+        "morning-lot-walk.md: Current status of staff vehicle inventory list",
+        "accountability-agreement-onboarding.md: Physical storage location and administrative owner of accountability agreement document",
+        "accountability-agreement-onboarding.md: Whether Key Cafe training is logged formally beyond WhatsApp"
+      ],
+      "ambiguous_items": [
+        "All trees: DHD vs DHG detailing vendor name — CLAUDE.md says DHD, walkthrough says DHG; trees follow CLAUDE.md; must be confirmed with management",
+        "staff-parking-repeat-violation.md: Status tag reads DRAFT — content is fully complete; minor tag omission from prior session",
+        "morning-lot-walk.md: Scott role title — referenced in daily-operations-workflow.md but exact role title as Lot Manager / Operations Manager is AMBIGUOUS"
+      ],
       "report_file": "systems-analysis/decision-trees/_PHASE_3B_REPORT.md",
       "prerequisite_phases": ["phase_1", "phase_2", "phase_3a"],
-      "notes": "Phase 3B completes the full set of 25 decision trees. Phase 4 requires BOTH phase_3a and phase_3b to be complete."
+      "notes": "Phase 3B completed 2026-03-09. All 12 trees verified complete + 1 report = 13 files total. All quality gates passed. 14 NEEDS_INPUT items, 3 AMBIGUOUS items. Minor formatting note: staff-parking-new-employee.md, staff-parking-repeat-violation.md, and sold-sign-missing-enforcement.md wrap tree content in markdown code blocks (presentational only, content complete). The full 25-tree decision tree set is now complete across Phase 3A (13 trees) and Phase 3B (12 trees). Phase 4 prerequisites are now all met."
     },
 
     "phase_4": {

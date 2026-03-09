@@ -13,6 +13,12 @@ Begin Phase 7 (Document Generation) last — create outputs/ and generate 7 form
 
 
 
-execute @Prompt-2.md in full
+execute @prompts/zzz-03b-prompts/Prompt-1.md in full
 
-execute @Prompt-3.md in full
+execute @prompts/zzz-03b-prompts/Prompt-2.md in full
+
+execute @prompts/zzz-03b-prompts/Prompt-3.md in full
+
+execute @prompts/zzz-03b-prompts/Prompt-4.md in full
+
+execute @prompts/zzz-03b-prompts/Prompt-5.md in full
