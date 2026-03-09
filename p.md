@@ -1,0 +1,1 @@
+@chathistory-1.md based on this and the project workspace whats the next steps? dont make any changes, simple send a concise message explaining the 'SOP' of what i need to do. only one sentence bullet points on each step.
