@@ -2,6 +2,8 @@
   "project": "Sturgeon Dodge Edmonton Office Lot Operations SOP",
   "schema_version": "1.0",
   "last_updated": "2026-03-09",
+  "_phase_4_session_note": "complete — all 5 SOPs verified, quality gates passed, report written",
+  "_phase_3b_cleanup_note": "formatting cleanup complete — code fences removed from 3 files, staff-parking-repeat-violation.md status updated to [COMPLETE]",
   "_phase_3b_session_note": "complete — all 12 trees verified, report written",
   "_phase_3a_session_note": "in_progress — files 1-5 being created this session per Prompt-1.md",
   "notes": "State file shared across all sessions. Each prompt reads this file to verify prerequisites and writes to it upon completion. Do not edit manually unless resetting a phase.",
@@ -233,14 +235,14 @@
       ],
       "report_file": "systems-analysis/decision-trees/_PHASE_3B_REPORT.md",
       "prerequisite_phases": ["phase_1", "phase_2", "phase_3a"],
-      "notes": "Phase 3B completed 2026-03-09. All 12 trees verified complete + 1 report = 13 files total. All quality gates passed. 14 NEEDS_INPUT items, 3 AMBIGUOUS items. Minor formatting note: staff-parking-new-employee.md, staff-parking-repeat-violation.md, and sold-sign-missing-enforcement.md wrap tree content in markdown code blocks (presentational only, content complete). The full 25-tree decision tree set is now complete across Phase 3A (13 trees) and Phase 3B (12 trees). Phase 4 prerequisites are now all met."
+      "notes": "Phase 3B completed 2026-03-09. All 12 trees verified complete + 1 report = 13 files total. All quality gates passed. 14 NEEDS_INPUT items, 3 AMBIGUOUS items. Minor formatting note: staff-parking-new-employee.md, staff-parking-repeat-violation.md, and sold-sign-missing-enforcement.md wrap tree content in markdown code blocks (presentational only, content complete). The full 25-tree decision tree set is now complete across Phase 3A (13 trees) and Phase 3B (12 trees). Phase 4 prerequisites are now all met. Formatting cleanup completed 2026-03-09: removed code fence wrappers from 3 files; updated staff-parking-repeat-violation.md status from DRAFT to [COMPLETE]. All 25 trees now fully conform to CLAUDE.md format spec."
     },
 
     "phase_4": {
       "label": "SOP Generation",
-      "status": "pending",
-      "started_at": null,
-      "completed_at": null,
+      "status": "complete",
+      "started_at": "2026-03-09",
+      "completed_at": "2026-03-09",
       "files_expected": [
         "sops/master-sop.md",
         "sops/team-lot.md",
@@ -249,13 +251,31 @@
         "sops/team-management.md",
         "sops/_PHASE_4_REPORT.md"
       ],
-      "files_confirmed_created": [],
-      "quality_gates_passed": false,
-      "needs_input_items": [],
-      "ambiguous_items": [],
+      "files_confirmed_created": [
+        "sops/master-sop.md",
+        "sops/team-lot.md",
+        "sops/team-sales.md",
+        "sops/team-service.md",
+        "sops/team-management.md",
+        "sops/_PHASE_4_REPORT.md"
+      ],
+      "quality_gates_passed": true,
+      "needs_input_items": [
+        "master-sop.md Section 9.1: Formal escalation action after Strike 3 fails — not confirmed in source material",
+        "master-sop.md Section 10: Who bears $275 skipped-detail rework cost — not confirmed",
+        "master-sop.md Section 10: Exact tow cost from ship mode delivery failure — not confirmed",
+        "master-sop.md Section 10: Exact Stellantis non-compliance fine amounts — must be obtained from Stellantis dealer agreement",
+        "master-sop.md Section 10: Stellantis docking mechanism and amounts — not confirmed",
+        "team-management.md Section 3: Current status of staff vehicle inventory list compilation",
+        "team-management.md Section 4: Exact HR/payroll deduction process for applying financial penalties"
+      ],
+      "ambiguous_items": [
+        "DHD vs. DHG vendor name — all SOPs use DHD per CLAUDE.md; must be confirmed with management before distribution",
+        "Service Department Lead contact information — referenced in multiple SOPs but confirmed contact not specified in source"
+      ],
       "report_file": "sops/_PHASE_4_REPORT.md",
       "prerequisite_phases": ["phase_1", "phase_2", "phase_3a", "phase_3b"],
-      "notes": ""
+      "notes": "Phase 4 completed 2026-03-09. All 5 SOPs created in parallel batches in prior sessions; Solo session verified all quality gates and wrote completion report. All 14 quality gates passed. 7 NEEDS_INPUT items and 2 AMBIGUOUS items documented. Master SOP Section 11 contains all 25 decision tree cross-references. Each team SOP is self-contained for its role audience."
     },
 
     "phase_5": {

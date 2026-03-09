@@ -22,3 +22,10 @@ execute @prompts/zzz-03b-prompts/Prompt-3.md in full
 execute @prompts/zzz-03b-prompts/Prompt-4.md in full
 
 execute @prompts/zzz-03b-prompts/Prompt-5.md in full
+
+
+
+what was removed from @sops/master-sop.md :
+
+- All 20 stalls must be full at all times
+- Maximum of ONE empty stall is permitted — and only when that vehicle was just sold and a replacement has not yet been sourced

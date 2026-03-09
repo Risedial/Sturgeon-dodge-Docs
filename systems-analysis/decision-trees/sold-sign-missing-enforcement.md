@@ -15,7 +15,6 @@ Lot Manager / Operations Manager
 
 ## Decision Tree
 
-```
 START
 │
 ├── Q: Is a sold sign with the customer's name visibly placed inside the vehicle?
@@ -160,7 +159,6 @@ START
 │                       │                                     issued, no result. Escalated
 │                       │                                     to GM at [time]."
 │                       │                               END
-```
 
 ---
 
@@ -185,4 +183,3 @@ START
 - **The expected response to Strike 3** ("No, no, buddy, I'm coming down myself. I'll do it myself.") is confirmed in source material as the typical outcome. This is the expected self-correction pattern.
 - **Escalation path after Strike 3 failure** is not specified in source material. The interim escalation to Owner / General Manager in this tree is constructed from general escalation logic. Confirm with management. [NEEDS_INPUT]
 - **The 3-strike protocol is directed at Sales Manager (Kevin)** — not at individual salespersons. The Sales Manager is the accountability point for his team's compliance.
-```

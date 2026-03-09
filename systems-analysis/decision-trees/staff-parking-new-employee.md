@@ -95,4 +95,3 @@ START
 - A new employee who parks on the lot has not done anything wrong — they were not told. The violation is informational, not disciplinary, until they have been informed and choose not to comply.
 - If an employee complies immediately, no further action is needed beyond the WhatsApp log entry for documentation.
 - [NEEDS_INPUT] First violation protocol for existing employees (employees who knew the rule but park on the lot for the first time after being informed) — source material does not specify. If that scenario arises, use → SEE: staff-parking-repeat-violation.md as the closest applicable tree.
-```

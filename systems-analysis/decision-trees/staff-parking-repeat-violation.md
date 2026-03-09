@@ -1,6 +1,6 @@
 # Decision Tree: Staff Parking — Repeat Violation
 **File:** staff-parking-repeat-violation.md
-**Status:** DRAFT
+**Status:** [COMPLETE]
 **Cross-references:** staff-parking-new-employee.md
 
 ---
@@ -17,7 +17,6 @@ Lot Manager / Operations Manager
 
 ## Decision Tree
 
-```
 START
 │
 ├── Q: Is the employee's vehicle parked on the dealership lot (not on the street)?
@@ -109,7 +108,6 @@ START
 │       │                                   disciplinary action is at management
 │       │                                   discretion. [NEEDS_INPUT]
 │       │                           END
-```
 
 ---
 
@@ -127,4 +125,3 @@ START
 - Documentation in WhatsApp group is mandatory. Every parking violation — first or repeat — must be logged so that if a pattern continues, there is a record of every instance and every action taken.
 - The Owner / General Manager parks on the street personally even when blocked — this is the standard the whole team is held to. Parking on the lot is never acceptable regardless of role.
 - The "all sales have to park on the street" language is confirmed. Exact language for the repeat-violation reminder is not in source material — the SAY text in this tree is constructed from the established principle. [ASSUMPTION]
-```
