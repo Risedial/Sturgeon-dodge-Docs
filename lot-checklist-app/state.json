@@ -1,0 +1,91 @@
+{
+  "target_prompt": "MASTER-APP-BOOTSTRAP-PROMPT.md",
+  "decomposed_by": "META-SPLIT-PROMPT",
+  "created": "2026-03-09T00:00:00Z",
+  "last_updated": "2026-03-09T14:30:00Z",
+  "overall_status": "in_progress",
+  "prompts": {
+    "00": {
+      "label": "initialize-state",
+      "status": "complete",
+      "parallel_group": null,
+      "depends_on": [],
+      "unblocks": ["01", "02", "03"],
+      "input_files": [],
+      "output_files": [
+        "lot-checklist-app/state.json",
+        "lot-checklist-app/README.md"
+      ],
+      "started_at": "2026-03-09T00:00:00Z",
+      "completed_at": "2026-03-09T12:00:00Z",
+      "notes": "This prompt (MASTER-APP-BOOTSTRAP-PROMPT.md) IS prompt 00. Mark complete after all four micro-prompt files are written."
+    },
+    "01": {
+      "label": "generate-blueprint",
+      "status": "complete",
+      "parallel_group": "A",
+      "depends_on": ["00"],
+      "unblocks": ["04"],
+      "input_files": [
+        "CLAUDE.md",
+        "app-spec/lot-checklist-app-requirements.md",
+        "lot-checklist-app/state.json"
+      ],
+      "output_files": ["lot-checklist-app/blueprint.md"],
+      "started_at": "2026-03-09T13:00:00Z",
+      "completed_at": "2026-03-09T13:30:00Z",
+      "notes": ""
+    },
+    "02": {
+      "label": "generate-styling-spec",
+      "status": "complete",
+      "parallel_group": "A",
+      "depends_on": ["00"],
+      "unblocks": ["04"],
+      "input_files": [
+        "CLAUDE.md",
+        "app-spec/lot-checklist-app-requirements.md",
+        "lot-checklist-app/state.json"
+      ],
+      "output_files": ["lot-checklist-app/styling-spec.md"],
+      "started_at": "2026-03-09T13:01:00Z",
+      "completed_at": "2026-03-09T13:35:00Z",
+      "notes": ""
+    },
+    "03": {
+      "label": "generate-implementation-plan",
+      "status": "complete",
+      "parallel_group": "A",
+      "depends_on": ["00"],
+      "unblocks": ["04"],
+      "input_files": [
+        "CLAUDE.md",
+        "app-spec/lot-checklist-app-requirements.md",
+        "lot-checklist-app/state.json"
+      ],
+      "output_files": ["lot-checklist-app/implementation-plan.md"],
+      "started_at": "2026-03-09T14:00:00Z",
+      "completed_at": "2026-03-09T14:30:00Z",
+      "notes": ""
+    },
+    "04": {
+      "label": "generate-build-sequence",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["01", "02", "03"],
+      "unblocks": [],
+      "input_files": [
+        "CLAUDE.md",
+        "app-spec/lot-checklist-app-requirements.md",
+        "lot-checklist-app/state.json",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md"
+      ],
+      "output_files": ["lot-checklist-app/build-sequence/"],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Creates numbered atomic build prompts in lot-checklist-app/build-sequence/"
+    }
+  }
+}
