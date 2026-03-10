@@ -2,6 +2,7 @@
   "project": "Sturgeon Dodge Edmonton Office Lot Operations SOP",
   "schema_version": "1.0",
   "last_updated": "2026-03-09",
+  "_phase_7_session_note": "in_progress — batch 1 (master-sop, team-lot, team-sales) being created this session",
   "_phase_6_session_note": "complete — app spec and report written, all quality gates passed",
   "_phase_5_session_note": "complete — all 8 checklists verified, all quality gates passed, report written",
   "_phase_4_session_note": "complete — all 5 SOPs verified, quality gates passed, report written",
@@ -353,8 +354,8 @@
 
     "phase_7": {
       "label": "Document Generation",
-      "status": "pending",
-      "started_at": null,
+      "status": "in_progress",
+      "started_at": "2026-03-09",
       "completed_at": null,
       "files_expected": [
         "outputs/master-sop.docx",

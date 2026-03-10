@@ -26,7 +26,7 @@ The Edmonton Office lot currently relies on paper-based and verbal processes for
 
 **Lot Manager / Management** reviews completed audit results, monitors PDI compliance status, tracks outstanding tasks, and assigns follow-up items to teams.
 
-**Admin (Jorja and Giselle)** do not use this app. Their function — creating physical stock-in tags — is not digitized by this product.
+**Admin (Jorja)** do not use this app. Their function — creating physical stock-in tags — is not digitized by this product.
 
 ### Expected Outcome
 
@@ -70,7 +70,7 @@ Capabilities:
 
 ---
 
-### Role 3: Admin (Jorja and Giselle)
+### Role 3: Admin (Jorja)
 
 **No app interaction required.**
 
