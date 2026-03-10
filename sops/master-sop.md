@@ -202,26 +202,7 @@ The Edmonton Office lot has seven zones. Every zone has a defined purpose, defin
 
 ---
 
-### 2.6 Auction Area
-
-**Canonical Name:** Auction Area
-**Physical Description:** Designated area at the front of the lot for auction-bound vehicles.
-**Slot Count:** 19–20 vehicles
-**Purpose:** Vehicles routed to auction. These are not available for retail sale.
-
-**Allowed vehicles:**
-- Auction Bound vehicles only
-
-**Prohibited vehicles:**
-- Any vehicle available for retail sale
-- Retail inventory
-- NEW or FLR vehicles
-
-**Common problem:** Vehicles routed incorrectly sometimes end up sitting in or in front of the Auction Area. If a vehicle is here and should not be, identify it and move it to the correct zone immediately.
-
----
-
-### 2.7 Staff Parking
+### 2.6 Staff Parking
 
 **Canonical Name:** Staff Parking
 **Physical Location:** Street ONLY — not on the lot itself
@@ -240,7 +221,7 @@ The Edmonton Office lot has seven zones. Every zone has a defined purpose, defin
 
 ---
 
-### 2.8 Zone Summary
+### 2.7 Zone Summary
 
 | Zone | Slot Count | Primary Content | Zone Type |
 |---|---|---|---|
@@ -249,7 +230,6 @@ The Edmonton Office lot has seven zones. Every zone has a defined purpose, defin
 | West Side of Building | 5 (L1–L5) | BND overflow + RECON + SOLD overflow | Fixed |
 | Overflow (Temporary) | Unlimited | Any overflow — labeled with destination | Temporary |
 | Power Sport / Quad Corner | Access only | Power sport, boats, Hysen (seasonal) | Specialty |
-| Auction Area | 19–20 | Auction Bound vehicles only | Designated |
 | Staff Parking | N/A — street only | Staff personal vehicles (off-lot) | Off-lot |
 
 ---
@@ -275,7 +255,7 @@ Every vehicle on the Edmonton Office lot is in exactly one state at all times. T
 | Customer Vehicle | A customer's personal vehicle on the lot for any reason. Does NOT belong to the dealership. | Not an inventory item — must be signed | Designated area; signed |
 | Recon | Vehicle undergoing reconditioning or mechanical work before retail sale. | `IN RECON`, `INCOMING`, `WHOLESALE`, or `CHASE` | West Side of Building |
 | Dealer Trade Incoming | Vehicle arriving from another dealership. Requires final PDI + full detail before placement. | `AVAILABLE` (applied immediately on arrival) | Awaiting service routing |
-| Auction Bound | Vehicle routed to auction rather than retail sale. | Not tracked with a specific Airtable status label | Auction Area |
+| Auction Bound | Vehicle routed to auction rather than retail sale. | Not tracked with a specific Airtable status label | Cage |
 | Non-Prime / Division One | Vehicle identified as belonging to the Non-Prime division. Prohibited on this lot. | Airtable `STOCK HOLDER` = `NON PRIME DIVISION` | Must be removed immediately |
 
 ### 3.2 State Transition Summary
@@ -416,13 +396,13 @@ For vehicles competing for Cage slots, apply priority in this order:
 
 **What:** A white identification tag confirming the vehicle has been received, processed, and entered into inventory.
 
-**Who creates:** Admin — Stock Tags (Jorja) and Admin/Tech — Stock Tags + Service (Giselle). Both fill out tags and hand completed tags to the lot team.
+**Who creates:** Admin — Stock Tags (Jorja) and Admin/Tech — Stock Tags. Both fill out tags and hand completed tags to the lot team.
 
-**Who places:** Lot team. Immediately after receiving the tag from Jorja or Giselle.
+**Who places:** Lot team. Immediately after receiving the tag from Jorja.
 
 **Placement:** Bottom-right corner of the windshield — always, on every vehicle, no exceptions.
 
-**Color:** White. Do NOT use yellow — yellow tags look like AutoWorld tags and cause confusion.
+**Color:** White. Do NOT use yellow.
 
 **Tag content:** Year (model year), Make (manufacturer), Model (model name).
 
@@ -492,11 +472,11 @@ The absence of a single tag or sign resulted in 6 weeks of immobilization for th
 
 ### 6.1 Key Cafe — The Only System of Record
 
-**Key Cafe is the single source of truth for all key and dealer plate custody.** Every key set and every dealer plate must flow through Key Cafe for every transaction — no exceptions, no shortcuts.
+**Key Cafe is the single source of truth for all keys.** Every key set and every dealer plate must flow through Key Cafe for every transaction — no exceptions, no shortcuts.
 
 **Physical location:** 3rd floor by Jorja's desk.
 
-At any moment, Key Cafe must accurately reflect: which keys and plates are currently signed out, who signed them out, and when they were signed out. If the location of a key or plate cannot be determined from Key Cafe, that is a compliance failure requiring immediate investigation.
+At any moment, Key Cafe must accurately reflect: which keys are currently signed out, who signed them out, and when they were signed out. If the location of a key or plate cannot be determined from Key Cafe, that is a compliance failure requiring immediate investigation.
 
 ### 6.2 Accountability Agreement — Required Before Any Access
 
@@ -514,7 +494,7 @@ Every employee must sign the Accountability Agreement before they can access any
 
 1. Employee goes to Key Cafe (3rd floor by Jorja's desk)
 2. Employee signs out the key or plate under their name
-3. Transaction is logged: employee name + timestamp
+3. Transaction is logged in the system
 4. Employee takes the item
 
 **No exceptions:**
@@ -551,12 +531,12 @@ This is the exact language. There are no alternative acceptable responses.
 
 Peer-to-peer transfers destroy accountability. They are prohibited under all circumstances.
 
-### 6.6 GPS Key Tags
+### 6.6 Key Cafe Key Tags
 
-Every set of keys at the Edmonton Office has a GPS-enabled tag attached.
+Every set of keys at the Edmonton Office has a tag attached.
 
 **Rules:**
-- GPS key tags must remain attached to the key set at all times
+- Key Cafe key tags must remain attached to the key set at all times
 - Tags must not be removed, damaged, or lost
 - If a tag is separated from the key set: report it immediately
 
@@ -643,7 +623,7 @@ The 2-day PDI window begins at vehicle delivery — ship mode does not extend th
 
 → SEE: vehicle-arrival-ship-mode.md
 
-**The ship mode delivery failure (confirmed incident):** A vehicle was delivered to a customer while still in ship mode. The battery was disconnected. The car died the next day. The vehicle had to be towed back to the dealership. Cost: $275 (skipped detail rework) + tow cost + complete rework of the entire preparation process. **This confirms that ship mode clearance and PDI cannot be skipped under any circumstances.**
+**The ship mode delivery failure (confirmed incident):** A vehicle was delivered to a customer while still in ship mode. The battery was disconnected. The car died the next day. The vehicle had to be towed back to the dealership.
 
 ### 7.6 Dealer Trade PDI
 
@@ -691,8 +671,7 @@ If PDI reveals mechanical issues: the vehicle does NOT return to the Cage. Updat
 3. West Side of Building (all 5 slots)
 4. Overflow (Temporary) area
 5. Power Sport / Quad Corner
-6. Auction Area
-7. Staff Parking (confirm no staff vehicles are on the lot)
+6. Staff Parking (confirm no staff vehicles are on the lot)
 
 **Per-vehicle checks (apply to every vehicle in every zone):**
 
@@ -755,7 +734,7 @@ Lot Manager / Operations Manager conducts a walk around all zones at end of day.
 
 ### 8.6 Service Department Routing — Throughout the Day
 
-Every vehicle that needs work must be routed to the service department. This is both a compliance requirement (PDI within 2 days) and a financial requirement (9 service staff at ~$3,000/day must be productively utilized).
+Every vehicle that needs work must be routed to the service department. This is both a compliance requirement (PDI within 2 days) and a financial requirement.
 
 **What to route to service:**
 - New arrivals requiring PDI
@@ -771,7 +750,7 @@ Every vehicle that needs work must be routed to the service department. This is 
 
 ### 9.1 3-Strike Sold Sign Escalation
 
-When a vehicle is identified as sold but does not have a sold sign with the customer name, the Lot Manager escalates using this exact protocol directed at the Sales Manager (Kevin).
+When a vehicle is identified as sold but does not have a sold sign with the customer name, the Lot Manager escalates using this exact protocol directed at the Sales Manager (Kevin/Jesse).
 
 **Strike 1 — Polite, helpful request**
 - Initiated when: sold sign is missing and a reasonable amount of time has passed

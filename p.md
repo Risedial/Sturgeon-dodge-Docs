@@ -29,3 +29,24 @@ what was removed from @sops/master-sop.md :
 
 - All 20 stalls must be full at all times
 - Maximum of ONE empty stall is permitted — and only when that vehicle was just sold and a replacement has not yet been sourced
+
+
+### 2.6 Auction Area
+
+**Canonical Name:** Auction Area
+**Physical Description:** Designated area at the front of the lot for auction-bound vehicles.
+**Slot Count:** 19–20 vehicles
+**Purpose:** Vehicles routed to auction. These are not available for retail sale.
+
+**Allowed vehicles:**
+- Auction Bound vehicles only
+
+**Prohibited vehicles:**
+- Any vehicle available for retail sale
+- Retail inventory
+- NEW or FLR vehicles
+
+**Common problem:** Vehicles routed incorrectly sometimes end up sitting in or in front of the Auction Area. If a vehicle is here and should not be, identify it and move it to the correct zone immediately.
+
+
+ and dealer plate custody

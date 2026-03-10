@@ -2,6 +2,8 @@
   "project": "Sturgeon Dodge Edmonton Office Lot Operations SOP",
   "schema_version": "1.0",
   "last_updated": "2026-03-09",
+  "_phase_6_session_note": "complete — app spec and report written, all quality gates passed",
+  "_phase_5_session_note": "complete — all 8 checklists verified, all quality gates passed, report written",
   "_phase_4_session_note": "complete — all 5 SOPs verified, quality gates passed, report written",
   "_phase_3b_cleanup_note": "formatting cleanup complete — code fences removed from 3 files, staff-parking-repeat-violation.md status updated to [COMPLETE]",
   "_phase_3b_session_note": "complete — all 12 trees verified, report written",
@@ -280,9 +282,9 @@
 
     "phase_5": {
       "label": "Checklists",
-      "status": "pending",
-      "started_at": null,
-      "completed_at": null,
+      "status": "complete",
+      "started_at": "2026-03-09",
+      "completed_at": "2026-03-09",
       "files_expected": [
         "checklists/vehicle-audit-new.md",
         "checklists/vehicle-audit-flr.md",
@@ -294,31 +296,59 @@
         "checklists/key-plate-accountability-checklist.md",
         "checklists/_PHASE_5_REPORT.md"
       ],
-      "files_confirmed_created": [],
-      "quality_gates_passed": false,
-      "needs_input_items": [],
-      "ambiguous_items": [],
+      "files_confirmed_created": [
+        "checklists/vehicle-audit-new.md",
+        "checklists/vehicle-audit-flr.md",
+        "checklists/vehicle-audit-sold.md",
+        "checklists/vehicle-audit-bnd.md",
+        "checklists/vehicle-audit-recon.md",
+        "checklists/morning-lot-walk-checklist.md",
+        "checklists/pdi-completion-checklist.md",
+        "checklists/key-plate-accountability-checklist.md",
+        "checklists/_PHASE_5_REPORT.md"
+      ],
+      "quality_gates_passed": true,
+      "needs_input_items": [
+        "vehicle-audit-new.md Item 7: DHD contact method (phone, WhatsApp, or other) not confirmed in source material",
+        "vehicle-audit-flr.md Item 2: DHD contact method — same as above",
+        "vehicle-audit-recon.md Item 6: DHD contact method — same as above",
+        "vehicle-audit-sold.md Notes: Formal escalation consequence if Strike 3 of 3-strike sold sign protocol fails — not confirmed",
+        "vehicle-audit-bnd.md Notes: Same as above — Strike 3 formal escalation consequence not confirmed"
+      ],
+      "ambiguous_items": [
+        "DHD vs. DHG vendor name — all checklists use DHD per CLAUDE.md; must be confirmed with management before distribution"
+      ],
       "report_file": "checklists/_PHASE_5_REPORT.md",
       "prerequisite_phases": ["phase_4"],
-      "notes": ""
+      "notes": "Phase 5 completed 2026-03-09. All 8 checklists created in parallel batches in prior sessions; Solo session verified all quality gates and wrote completion report. All quality gates passed. 5 NEEDS_INPUT items and 1 AMBIGUOUS item (carried forward). All 8 files conform to binary Yes/No format with named-role Failure Actions. Morning walk covers all 7 zones. FLR and RECON checklists enforce PDI-before-Cage gate. PDI tracking includes Day 1 and Day 2+ escalation paths with exact language. Key/plate checklist covers sign-out, sign-in, and periodic audit."
     },
 
     "phase_6": {
       "label": "App Specification",
-      "status": "pending",
-      "started_at": null,
-      "completed_at": null,
+      "status": "complete",
+      "started_at": "2026-03-09",
+      "completed_at": "2026-03-09",
       "files_expected": [
         "app-spec/lot-checklist-app-requirements.md",
         "app-spec/_PHASE_6_REPORT.md"
       ],
-      "files_confirmed_created": [],
-      "quality_gates_passed": false,
-      "needs_input_items": [],
-      "ambiguous_items": [],
+      "files_confirmed_created": [
+        "app-spec/lot-checklist-app-requirements.md",
+        "app-spec/_PHASE_6_REPORT.md"
+      ],
+      "quality_gates_passed": true,
+      "needs_input_items": [
+        "lot-checklist-app-requirements.md Section 4: Overdue task time threshold — not defined in source material; management must specify",
+        "lot-checklist-app-requirements.md Section 4: Lot map image (top-down schematic) needed for zone navigation thumbnail feature in Phase 2",
+        "Carried from Phase 5: DHD contact method unresolved in 3 checklist files — affects Failure Action text in app",
+        "Carried from Phase 5: Strike 3 formal escalation consequence unresolved in 2 checklist files"
+      ],
+      "ambiguous_items": [
+        "DHD vs. DHG vendor name — all files use DHD per CLAUDE.md; must be confirmed with management before Phase 7 distribution"
+      ],
       "report_file": "app-spec/_PHASE_6_REPORT.md",
       "prerequisite_phases": ["phase_5", "phase_3a", "phase_3b"],
-      "notes": ""
+      "notes": "Phase 6 completed 2026-03-09. Both files created. All quality gates passed. 4 NEEDS_INPUT items (2 new, 2 carried from Phase 5), 1 AMBIGUOUS item (carried). App spec is non-technical — suitable for product manager handoff. Phase 2 features (decision trees, Airtable integration) are clearly distinct from MVP."
     },
 
     "phase_7": {
