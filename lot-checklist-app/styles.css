@@ -305,3 +305,133 @@ body {
   overflow-y:     auto;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ============================================================
+   TASK 03 — GLASS MATERIAL CLASSES
+   Source: lot-checklist-app/styling-spec.md Section 3
+   Values tagged [SOURCE: dev.to] from dev.to/kevinbism (retrieved).
+   Values tagged [STANDARD] from Apple HIG conventions.
+   Values tagged [STANDARD — dark] derived from Apple dark system colors.
+   ============================================================ */
+
+/* ----- Glass custom properties (appended to :root) ----- */
+:root {
+  --glass-bg-light:               rgba(255, 255, 255, 0.72);   /* [STANDARD] */
+  --glass-bg-dark:                rgba(28, 28, 30, 0.72);      /* [STANDARD — dark] */
+  --glass-bg-card-light:          rgba(255, 255, 255, 0.15);   /* SOURCE: dev.to */
+  --glass-bg-card-dark:           rgba(28, 28, 30, 0.25);      /* [STANDARD — dark] */
+  --glass-border:                 1px solid rgba(255, 255, 255, 0.8);   /* SOURCE: dev.to */
+  --glass-border-dark:            1px solid rgba(255, 255, 255, 0.15);  /* [STANDARD — dark] */
+  --glass-backdrop-filter:        blur(20px) saturate(180%);   /* [STANDARD] */
+  --glass-backdrop-filter-subtle: blur(2px) saturate(180%);    /* SOURCE: dev.to */
+  --glass-shadow:                 0 8px 32px rgba(31, 38, 135, 0.2),
+                                  inset 0 4px 20px rgba(255, 255, 255, 0.3);  /* SOURCE: dev.to */
+  --glass-shadow-dark:            0 8px 32px rgba(0, 0, 0, 0.4),
+                                  inset 0 1px 0 rgba(255, 255, 255, 0.1);    /* [STANDARD — dark] */
+  --glass-inset-shine:            inset 0 1px 0 rgba(255, 255, 255, 0.5);    /* [STANDARD] */
+}
+
+/* ----- .glass-card ----- */
+/* Base glass surface. Used for: checklist item containers, TaskCards, AuditTypeTiles. */
+.glass-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--glass-bg-card-light);        /* rgba(255,255,255,0.15) — SOURCE: dev.to */
+  backdrop-filter: var(--glass-backdrop-filter); /* blur(20px) saturate(180%) — [STANDARD] */
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
+  border: var(--glass-border);                   /* 1px solid rgba(255,255,255,0.8) — SOURCE: dev.to */
+  border-radius: var(--radius-large);            /* 20px — [STANDARD] */
+  box-shadow: var(--glass-shadow);               /* SOURCE: dev.to */
+}
+
+/* Shine pseudo-element — SOURCE: dev.to/kevinbism */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+  backdrop-filter: blur(1px);
+  box-shadow: inset -10px -8px 0px -11px rgba(255, 255, 255, 1),
+              inset 0px -9px 0px -8px rgba(255, 255, 255, 1);
+  opacity: 0.6;
+  z-index: -1;
+  filter: blur(1px) drop-shadow(10px 4px 6px black) brightness(115%);
+  pointer-events: none;
+}
+
+[data-theme="dark"] .glass-card {
+  background: var(--glass-bg-card-dark);   /* rgba(28,28,30,0.25) — [STANDARD — dark] */
+  border: var(--glass-border-dark);        /* [STANDARD — dark] */
+  box-shadow: var(--glass-shadow-dark);    /* [STANDARD — dark] */
+}
+
+/* @supports fallback — solid background for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+  }
+  [data-theme="dark"] .glass-card {
+    background: rgba(28, 28, 30, 0.95);
+  }
+}
+
+/* ----- .glass-nav ----- */
+/* Fixed navigation bar. Slightly more opaque than .glass-card. [STANDARD] */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.82);         /* [STANDARD] */
+  backdrop-filter: blur(20px) saturate(180%);    /* [STANDARD] */
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 0.5px solid var(--color-separator);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--page-margin);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding-top: env(safe-area-inset-top);          /* [STANDARD] */
+  height: calc(56px + env(safe-area-inset-top));  /* [STANDARD] */
+}
+
+[data-theme="dark"] .glass-nav {
+  background: rgba(28, 28, 30, 0.82);  /* [STANDARD — dark] */
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-nav {
+    background: rgba(255, 255, 255, 1.0);
+  }
+  [data-theme="dark"] .glass-nav {
+    background: rgba(28, 28, 30, 1.0);
+  }
+}
+
+/* ----- .glass-modal ----- */
+/* Modal sheet. Most opaque variant. Used for FailureActionView, resume-prompt modal. [STANDARD] */
+.glass-modal {
+  background: rgba(255, 255, 255, 0.92);         /* [STANDARD] */
+  backdrop-filter: blur(40px) saturate(200%);    /* [STANDARD] */
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-radius: var(--radius-large) var(--radius-large) 0 0;  /* top corners only — sheet style */
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .glass-modal {
+  background: rgba(28, 28, 30, 0.92);  /* [STANDARD — dark] */
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-modal {
+    background: rgba(255, 255, 255, 1.0);
+  }
+  [data-theme="dark"] .glass-modal {
+    background: rgba(28, 28, 30, 1.0);
+  }
+}
