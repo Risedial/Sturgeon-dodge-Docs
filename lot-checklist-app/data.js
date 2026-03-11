@@ -348,13 +348,312 @@ const CHECKLISTS = {
     ]
   },
 
-  /* ---- Stubs for Task 06 ---- */
-  'morning-lot-walk': [],   /* Task 06 populates this — 15 items */
-  'pdi-compliance':   [],   /* Task 06 populates this — 1 template item */
+  /* ---- Morning Lot Walk (15 items) — source: checklists/morning-lot-walk-checklist.md ---- */
+  /* Zone assignments:
+       Items 1–2 (LOT-LEVEL CHECKS): zone null — not a canonical zone
+       Items 3–7 (Cage): zone "Cage"
+       Items 8–9 (East Side Fence Line): zone "East Side Fence Line"
+       Items 10–11 (West Side of Building): zone "West Side of Building"
+       Item 12 (Overflow): zone "Overflow (Temporary)"
+       Item 13 (Auction Area): zone "Auction Area"
+       Item 14 (Power Sport / Quad Corner): zone "Power Sport / Quad Corner"
+       Item 15 (END OF WALK): zone null — not a canonical zone
+  */
+  'morning-lot-walk': [
+    {
+      id: 'mlw-01',
+      text: 'Are there any staff vehicles currently parked on the lot (not on the street)?',
+      zone: null,
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'in person',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-02',
+      text: 'Is the staff vehicle list up to date \u2014 does it include name, make, model, and plate number for every current staff member?',
+      zone: null,
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'in person',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-03',
+      text: 'Is every vehicle in the Cage an FLR or NEW category vehicle \u2014 specifically, are there no SOLD, BND, or RECON vehicles in the Cage?',
+      zone: 'Cage',
+      failureAction: {
+        role: 'Lot Attendant',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-04',
+      text: 'Does every vehicle in the Cage have the correct signage \u2014 specifically, a white stock-in tag placed in the bottom-right corner of the windshield?',
+      zone: 'Cage',
+      failureAction: {
+        role: 'Lot Attendant',
+        channel: 'in person',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-05',
+      text: 'Is every vehicle in the Cage confirmed PDI complete (marked in manufacturer system) AND fully detailed (no stickers, no tape, no visible dirt or debris)?',
+      zone: 'Cage',
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Service'
+      }
+    },
+    {
+      id: 'mlw-06',
+      text: 'Are all Cage vehicles facing outward (toward customers/street) with adequate spacing on both sides so that both doors can fully open?',
+      zone: 'Cage',
+      failureAction: {
+        role: 'Lot Attendant',
+        channel: 'in person',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-07',
+      text: 'Is there a maximum of one empty Cage stall \u2014 and only if the vehicle in that stall was just sold?',
+      zone: 'Cage',
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-08',
+      text: 'Does every vehicle in the East Side Fence Line have correct signage for its status \u2014 specifically: a sold sign with customer name (for SOLD vehicles), or a sold sign with customer name (for BND vehicles), or a stock-in tag (for FLR sedan overflow)?',
+      zone: 'East Side Fence Line',
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Sales'
+      }
+    },
+    {
+      id: 'mlw-09',
+      text: 'Is every vehicle in the East Side Fence Line correctly categorized for this zone \u2014 specifically: SOLD, BND, or FLR sedan overflow only (no RECON, no unprocessed, no non-prime vehicles)?',
+      zone: 'East Side Fence Line',
+      failureAction: {
+        role: 'Lot Attendant',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-10',
+      text: 'Is every vehicle in the West Side of Building correctly categorized \u2014 specifically: BND overflow, RECON vehicles, or SOLD overflow only (no NEW vehicles, no FLR vehicles, no non-prime vehicles)?',
+      zone: 'West Side of Building',
+      failureAction: {
+        role: 'Lot Attendant',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-11',
+      text: 'Does every RECON vehicle in the West Side of Building have an active work order assigned in the service department?',
+      zone: 'West Side of Building',
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: 'No work order assigned for RECON vehicle [VIN] in West Side of Building. Please assign a work order immediately.',
+        responsibleTeam: 'Service'
+      }
+    },
+    {
+      id: 'mlw-12',
+      text: 'Does every vehicle currently staged in Overflow (Temporary) have a destination zone annotation \u2014 specifically, a documented destination in Airtable and/or WhatsApp team chat indicating which permanent zone the vehicle belongs in?',
+      zone: 'Overflow (Temporary)',
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-13',
+      text: 'Are all vehicles in the Auction Area correctly designated as auction-bound in Airtable \u2014 specifically, is there no retail inventory, FLR, or SOLD vehicle that has been incorrectly staged in the Auction Area?',
+      zone: 'Auction Area',
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-14',
+      text: 'Does the Power Sport / Quad Corner contain only power sport vehicles, boats, or seasonal Hysen units \u2014 specifically, are there no retail vehicles (inventory, SOLD, BND, RECON) in this zone?',
+      zone: 'Power Sport / Quad Corner',
+      failureAction: {
+        role: 'Lot Attendant',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    },
+    {
+      id: 'mlw-15',
+      text: 'Has a task list been compiled from all identified issues and posted in WhatsApp team chat, with tasks grouped by responsible team (Lot Team, Sales Team, Service Department)?',
+      zone: null,
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: null,
+        responsibleTeam: 'Lot'
+      }
+    }
+  ],
+
+  /* ---- PDI Compliance (1 template item) — source: checklists/pdi-completion-checklist.md ---- */
+  /* This is a single template item repeated once per vehicle in the PDI compliance review.
+     Per-vehicle repetition and VIN/arrival-date tracking is handled in app.js (Task 17).
+     The failureAction.say branches by computed status (ON TIME / DAY 1 OVERDUE / DAY 2+ OVERDUE CRITICAL).
+     Task 17 renders the correct status message based on calculated days elapsed.
+  */
+  'pdi-compliance': [
+    {
+      id: 'pdi-01',
+      text: 'Has the PDI been marked complete in the manufacturer system by the assigned technician?',
+      zone: null,
+      failureAction: {
+        role: 'Lot Manager',
+        channel: 'via WhatsApp',
+        say: 'DAY 1 OVERDUE: \u201cPDI for [VIN] is now overdue by 1 day. Stellantis compliance window has passed. Please prioritize this PDI today.\u201d\nDAY 2+ OVERDUE (CRITICAL \u2014 also escalate to General Manager): \u201cPDI for [VIN] is [X] days overdue. We are at risk of a Stellantis compliance fine and potential docking. This needs to be resolved today.\u201d',
+        responsibleTeam: 'Service'
+      }
+    }
+  ],
+
+  /* ---- Key/Plate Accountability ---- */
+  /* source: checklists/key-plate-accountability-checklist.md
+     Section A → sign-out (4 items: items 1–4 in source)
+     Section B → sign-in (2 items: items 5–6 in source)
+     Section C → periodic-audit (2 items: items 7–8 in source)
+  */
   'key-plate': {
-    'sign-out':       [],   /* Task 06 populates this — 4 items */
-    'sign-in':        [],   /* Task 06 populates this — 2 items */
-    'periodic-audit': []    /* Task 06 populates this — 2 items */
+
+    /* Section A — SIGN-OUT CHECKS (4 items) */
+    'sign-out': [
+      {
+        id: 'kp-out-01',
+        text: 'Is the employee\u2019s signed Accountability Agreement on file?',
+        zone: null,
+        failureAction: {
+          role: 'Lot Manager',
+          channel: 'in person',
+          say: 'I can\u2019t issue keys or plates until you\u2019ve signed the accountability agreement. See [Sales Manager/General Manager] to complete that before returning.',
+          responsibleTeam: 'Lot'
+        }
+      },
+      {
+        id: 'kp-out-02',
+        text: 'Is this sign-out being conducted through Key Cafe (not a peer-to-peer handoff)?',
+        zone: null,
+        failureAction: {
+          role: 'Lot Manager',
+          channel: 'in person',
+          say: 'You need to check it out through Key Cafe yourself \u2014 I can\u2019t accept it from you.',
+          responsibleTeam: 'Lot'
+        }
+      },
+      {
+        id: 'kp-out-03',
+        text: 'Is the transaction being logged with the employee\u2019s name and timestamp before the item is released?',
+        zone: null,
+        failureAction: {
+          role: 'Lot Manager',
+          channel: 'in person',
+          say: null,
+          responsibleTeam: 'Lot'
+        }
+      },
+      {
+        id: 'kp-out-04',
+        text: 'Is the requested item currently available \u2014 specifically, is it not currently signed out to another employee?',
+        zone: null,
+        failureAction: {
+          role: 'Requesting employee',
+          channel: 'in person',
+          say: null,
+          responsibleTeam: 'Lot'
+        }
+      }
+    ],
+
+    /* Section B — SIGN-IN CHECKS (2 items) */
+    'sign-in': [
+      {
+        id: 'kp-in-01',
+        text: 'Is the item being returned directly to Key Cafe by the employee who signed it out \u2014 specifically, is it NOT being handed to a coworker to return on their behalf?',
+        zone: null,
+        failureAction: {
+          role: 'Lot Manager',
+          channel: 'in person',
+          say: 'You need to return it through Key Cafe yourself \u2014 you\u2019re responsible for it until you check it in there.',
+          responsibleTeam: 'Lot'
+        }
+      },
+      {
+        id: 'kp-in-02',
+        text: 'Is the return transaction being logged with the employee\u2019s name and timestamp before the item is marked as available?',
+        zone: null,
+        failureAction: {
+          role: 'Lot Manager',
+          channel: 'in person',
+          say: null,
+          responsibleTeam: 'Lot'
+        }
+      }
+    ],
+
+    /* Section C — PERIODIC AUDIT CHECKS (2 items) */
+    'periodic-audit': [
+      {
+        id: 'kp-audit-01',
+        text: 'Does the Key Cafe log account for all items that should currently be signed out \u2014 specifically, can every currently-signed-out item be matched to a log entry with an employee name and sign-out timestamp?',
+        zone: null,
+        failureAction: {
+          role: 'Lot Manager',
+          channel: 'via WhatsApp',
+          say: null,
+          responsibleTeam: 'Lot'
+        }
+      },
+      {
+        id: 'kp-audit-02',
+        text: 'Are all GPS key tags physically attached to their key sets?',
+        zone: null,
+        failureAction: {
+          role: 'Lot Manager',
+          channel: 'in person',
+          say: null,
+          responsibleTeam: 'Lot'
+        }
+      }
+    ]
   }
 
 };
