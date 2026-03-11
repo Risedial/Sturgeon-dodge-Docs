@@ -1,0 +1,383 @@
+{
+  "target_prompt": "lot-checklist-app/implementation-plan.md (Build Sequence)",
+  "decomposed_by": "META-SPLIT-PROMPT",
+  "created": "2026-03-11T00:00:00Z",
+  "last_updated": "2026-03-11T01:20:00Z",
+  "overall_status": "pending",
+  "prompts": {
+    "01": {
+      "label": "project-scaffold",
+      "status": "complete",
+      "parallel_group": null,
+      "depends_on": [],
+      "unblocks": ["02", "05"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/implementation-plan.md"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/styles.css",
+        "lot-checklist-app/app.js",
+        "lot-checklist-app/data.js"
+      ],
+      "started_at": "2026-03-11T01:00:00Z",
+      "completed_at": "2026-03-11T01:05:00Z",
+      "notes": "Runs first. Creates all four source files as minimal stubs. No logic, styles, or data — stubs only."
+    },
+    "02": {
+      "label": "css-foundation",
+      "status": "complete",
+      "parallel_group": "A",
+      "depends_on": ["01"],
+      "unblocks": ["03"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/styles.css"
+      ],
+      "output_files": [
+        "lot-checklist-app/styles.css"
+      ],
+      "started_at": "2026-03-11T01:10:00Z",
+      "completed_at": "2026-03-11T01:15:00Z",
+      "notes": "Parallel Group A — can run in parallel with 05. Appends all CSS custom properties, color tokens, CSS reset, and base element styles to styles.css."
+    },
+    "03": {
+      "label": "glass-material-classes",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["02"],
+      "unblocks": ["04"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/styles.css"
+      ],
+      "output_files": [
+        "lot-checklist-app/styles.css"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 02. Appends .glass-card, .glass-nav, .glass-modal classes and their glass custom properties to styles.css."
+    },
+    "04": {
+      "label": "component-atom-styles",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["03"],
+      "unblocks": ["07"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/styles.css"
+      ],
+      "output_files": [
+        "lot-checklist-app/styles.css"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 03. Appends all component atom styles to styles.css."
+    },
+    "05": {
+      "label": "checklist-data-vehicle-audits",
+      "status": "complete",
+      "parallel_group": "A",
+      "depends_on": ["01"],
+      "unblocks": ["06"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/data.js",
+        "checklists/vehicle-audit-new.md",
+        "checklists/vehicle-audit-flr.md",
+        "checklists/vehicle-audit-sold.md",
+        "checklists/vehicle-audit-bnd.md",
+        "checklists/vehicle-audit-recon.md"
+      ],
+      "output_files": [
+        "lot-checklist-app/data.js"
+      ],
+      "started_at": "2026-03-11T01:15:00Z",
+      "completed_at": "2026-03-11T01:20:00Z",
+      "notes": "Parallel Group A — can run in parallel with 02. Populates CHECKLISTS['vehicle-audit'] for all 5 categories verbatim from checklist source files."
+    },
+    "06": {
+      "label": "checklist-data-other-audit-types",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["05"],
+      "unblocks": ["10"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/data.js",
+        "checklists/morning-lot-walk-checklist.md",
+        "checklists/pdi-completion-checklist.md",
+        "checklists/key-plate-accountability-checklist.md"
+      ],
+      "output_files": [
+        "lot-checklist-app/data.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 05. Populates CHECKLISTS['morning-lot-walk'], CHECKLISTS['pdi-compliance'], and CHECKLISTS['key-plate'] verbatim from source files."
+    },
+    "07": {
+      "label": "app-shell-html",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["04"],
+      "unblocks": ["08"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 04 (styles must be complete). Writes complete index.html with <head>, SVG sprite block, all 9 screen divs (empty), resume modal, and script tags."
+    },
+    "08": {
+      "label": "home-audit-type-select",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["07"],
+      "unblocks": ["09"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 07. Fills Home and AuditTypeSelect screen content. Adds appState, showScreen(), initFreshSession(), and audit type routing to app.js."
+    },
+    "09": {
+      "label": "vin-entry-category-select",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["08"],
+      "unblocks": ["10"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 08. Fills VINEntry and CategorySelect screen content. Adds VIN validation and category routing to app.js."
+    },
+    "10": {
+      "label": "checklist-view-yes-no-logic",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["06", "09"],
+      "unblocks": ["11", "16", "17"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js",
+        "lot-checklist-app/data.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 06 (data.js complete) and 09 (routing established). Fills ChecklistView HTML. Adds renderChecklistItem(), YES/NO button logic, advanceChecklist()."
+    },
+    "11": {
+      "label": "failure-action-view",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["10"],
+      "unblocks": ["12"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 10. Fills FailureActionView HTML. Adds renderFailureAction(), Done/Needs Follow-Up button logic. No back button on this screen — user must tap a response button."
+    },
+    "12": {
+      "label": "audit-summary-task-list-generation",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["11"],
+      "unblocks": ["13"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 11. Fills AuditSummary HTML. Adds renderAuditSummary() and generateTaskList()."
+    },
+    "13": {
+      "label": "task-list-screen",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["12"],
+      "unblocks": ["14"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 12. Fills TaskList HTML. Adds renderTaskList() with team grouping and FOLLOW-UP highlighting."
+    },
+    "14": {
+      "label": "share-function",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["13"],
+      "unblocks": ["15"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/app.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 13. Adds shareTaskList() using Web Share API with clipboard fallback. No CDN, no Telegram, no WhatsApp-specific integration."
+    },
+    "15": {
+      "label": "offline-resume",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["14"],
+      "unblocks": ["18"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 14 (all prior app.js work done). Adds full resumeCheck() per Section 6 algorithm. Adds persistState() canonical definition. Wires resume modal buttons."
+    },
+    "16": {
+      "label": "key-plate-subtype-select",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["10"],
+      "unblocks": ["18"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js",
+        "lot-checklist-app/data.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 10. Fills KeyPlateSubTypeSelect HTML. Adds sub-type routing: CHECKLISTS['key-plate']['sign-out' | 'sign-in' | 'periodic-audit']."
+    },
+    "17": {
+      "label": "pdi-compliance-review",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["10"],
+      "unblocks": ["18"],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/styling-spec.md",
+        "lot-checklist-app/implementation-plan.md",
+        "lot-checklist-app/blueprint.md",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js",
+        "lot-checklist-app/data.js"
+      ],
+      "output_files": [
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/app.js"
+      ],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Depends on 10. Fills PDIComplianceView HTML with VIN input, arrival date, status calculator (ON TIME / DAY 1 OVERDUE / DAY 2+ OVERDUE CRITICAL). Adds routing logic."
+    },
+    "18": {
+      "label": "integration-test",
+      "status": "pending",
+      "parallel_group": null,
+      "depends_on": ["15", "16", "17"],
+      "unblocks": [],
+      "input_files": [
+        "lot-checklist-app/build-sequence/state.json",
+        "lot-checklist-app/index.html",
+        "lot-checklist-app/styles.css",
+        "lot-checklist-app/app.js",
+        "lot-checklist-app/data.js"
+      ],
+      "output_files": [],
+      "started_at": null,
+      "completed_at": null,
+      "notes": "Final task. No new files. Depends on 15, 16, 17 (all features complete). Opens index.html in browser, runs all 6 integration test flows, documents and fixes all defects found."
+    }
+  }
+}
