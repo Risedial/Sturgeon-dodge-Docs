@@ -201,21 +201,257 @@
       </div>
     </div>
   </div>
-  <div id="key-plate-subtype-select" class="screen"></div>
-  <div id="checklist-view" class="screen"></div>
-  <div id="failure-action-view" class="screen"></div>
-  <div id="audit-summary" class="screen"></div>
-  <div id="task-list" class="screen"></div>
-  <div id="pdi-compliance-view" class="screen"></div>
+  <div class="screen" id="key-plate-subtype-select">
+    <nav class="glass-nav">
+      <button id="btn-kp-back" aria-label="Back" style="background:none; border:none; color:var(--color-accent); font-size:var(--text-body-size); cursor:pointer; display:flex; align-items:center; gap:var(--space-1); min-width:44px; min-height:44px;">
+        <svg aria-hidden="true" width="24" height="24"><use href="#icon-arrow-left" /></svg>
+        Back
+      </button>
+      <h1 style="font-size:var(--text-headline-size); font-weight:var(--text-headline-weight); color:var(--color-label-primary); flex:1; text-align:center; letter-spacing:var(--text-headline-ls);">Key / Plate Check</h1>
+      <span style="min-width:44px;"></span><!-- spacer to balance back button -->
+    </nav>
+
+    <div class="content-area">
+      <p style="font-size:var(--text-body-size); font-weight:var(--text-body-weight); color:var(--color-label-secondary); margin-bottom:var(--space-6); letter-spacing:var(--text-body-ls);">What is the reason for this check?</p>
+
+      <div style="display:flex; flex-direction:column; gap:var(--card-gap);">
+
+        <button id="btn-kp-sign-out" style="width:100%; min-height:64px; border:none; border-radius:var(--radius-large); background:var(--glass-bg-card-light); backdrop-filter:var(--glass-backdrop-filter); -webkit-backdrop-filter:var(--glass-backdrop-filter); border:var(--glass-border); box-shadow:var(--glass-shadow); padding:var(--card-padding); text-align:left; cursor:pointer; display:flex; align-items:center; gap:var(--space-4);">
+          <svg aria-hidden="true" width="24" height="24" style="color:var(--color-accent); flex-shrink:0;"><use href="#icon-key" /></svg>
+          <div>
+            <div style="font-size:var(--text-subheadline-size); font-weight:var(--text-subheadline-weight); color:var(--color-label-primary); letter-spacing:var(--text-subheadline-ls);">Sign-Out</div>
+            <div style="font-size:var(--text-footnote-size); color:var(--color-label-secondary); margin-top:2px;">4 items — signing a key or plate out of Key Cafe</div>
+          </div>
+        </button>
+
+        <button id="btn-kp-sign-in" style="width:100%; min-height:64px; border:none; border-radius:var(--radius-large); background:var(--glass-bg-card-light); backdrop-filter:var(--glass-backdrop-filter); -webkit-backdrop-filter:var(--glass-backdrop-filter); border:var(--glass-border); box-shadow:var(--glass-shadow); padding:var(--card-padding); text-align:left; cursor:pointer; display:flex; align-items:center; gap:var(--space-4);">
+          <svg aria-hidden="true" width="24" height="24" style="color:var(--color-accent); flex-shrink:0;"><use href="#icon-key" /></svg>
+          <div>
+            <div style="font-size:var(--text-subheadline-size); font-weight:var(--text-subheadline-weight); color:var(--color-label-primary); letter-spacing:var(--text-subheadline-ls);">Sign-In</div>
+            <div style="font-size:var(--text-footnote-size); color:var(--color-label-secondary); margin-top:2px;">2 items — returning a key or plate to Key Cafe</div>
+          </div>
+        </button>
+
+        <button id="btn-kp-periodic" style="width:100%; min-height:64px; border:none; border-radius:var(--radius-large); background:var(--glass-bg-card-light); backdrop-filter:var(--glass-backdrop-filter); -webkit-backdrop-filter:var(--glass-backdrop-filter); border:var(--glass-border); box-shadow:var(--glass-shadow); padding:var(--card-padding); text-align:left; cursor:pointer; display:flex; align-items:center; gap:var(--space-4);">
+          <svg aria-hidden="true" width="24" height="24" style="color:var(--color-accent); flex-shrink:0;"><use href="#icon-list-bullet" /></svg>
+          <div>
+            <div style="font-size:var(--text-subheadline-size); font-weight:var(--text-subheadline-weight); color:var(--color-label-primary); letter-spacing:var(--text-subheadline-ls);">Periodic Audit</div>
+            <div style="font-size:var(--text-footnote-size); color:var(--color-label-secondary); margin-top:2px;">2 items — routine accountability check of all keys and plates</div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+  </div>
+  <div id="checklist-view" class="screen">
+    <!-- Navigation bar -->
+    <nav class="glass-nav" style="position:relative; flex-direction:column; height:auto; padding-top:calc(var(--space-2) + env(safe-area-inset-top)); padding-bottom:var(--space-2);">
+      <div style="display:flex; align-items:center; width:100%; height:44px;">
+        <span id="checklist-nav-title" style="font-size:var(--text-headline-size); font-weight:var(--text-headline-weight); color:var(--color-label-primary); letter-spacing:var(--text-headline-ls);">Checklist</span>
+        <span id="checklist-nav-counter" style="font-size:var(--text-subheadline-size); color:var(--color-label-secondary); margin-left:auto;"></span>
+      </div>
+    </nav>
+
+    <!-- Progress bar — fixed below nav, full width -->
+    <div style="position:fixed; left:0; right:0; top:calc(56px + env(safe-area-inset-top)); z-index:99; height:3px; background:var(--color-separator);">
+      <div id="checklist-progress-fill" style="height:3px; background:var(--color-accent); border-radius:var(--radius-pill); width:0%; transition:width var(--duration-standard) var(--easing-standard);"></div>
+    </div>
+
+    <!-- Scrollable content area -->
+    <div class="content-area" style="padding-top:calc(var(--space-6) + 3px);">
+
+      <!-- Zone header — visible for morning-lot-walk items with a zone value; hidden otherwise -->
+      <div id="zone-header-container" style="display:none; padding:var(--space-6) 0 var(--space-2) 0;">
+        <span id="zone-header-text" style="font-size:var(--text-caption-2-size); font-weight:var(--text-caption-2-weight); text-transform:uppercase; letter-spacing:var(--text-caption-2-ls); color:var(--color-label-secondary);"></span>
+      </div>
+
+      <!-- Checklist item card -->
+      <div class="glass-card" id="checklist-item-card" style="padding:var(--card-padding); margin-bottom:var(--space-6);">
+        <p id="checklist-item-text" style="font-size:var(--text-body-size); font-weight:var(--text-body-weight); line-height:var(--text-body-lh); letter-spacing:var(--text-body-ls); color:var(--color-label-primary); margin:0;"></p>
+      </div>
+
+      <!-- YES / NO buttons — side by side, 50% width each -->
+      <div style="display:flex; gap:var(--space-3);">
+        <button id="btn-yes" class="btn-yes" style="flex:1; height:52px; font-size:var(--text-headline-size); font-weight:var(--text-headline-weight); color:#FFFFFF; background:var(--color-audit-yes); border:none; border-radius:var(--radius-medium); cursor:pointer; padding:0 var(--space-4);">YES</button>
+        <button id="btn-no" class="btn-no" style="flex:1; height:52px; font-size:var(--text-headline-size); font-weight:var(--text-headline-weight); color:#FFFFFF; background:var(--color-audit-no); border:none; border-radius:var(--radius-medium); cursor:pointer; padding:0 var(--space-4);">NO</button>
+      </div>
+
+    </div>
+  </div>
+  <div id="failure-action-view" class="screen">
+
+    <!-- Nav bar — no back button on this screen (implementation-plan.md Task 11 Enforcement) -->
+    <nav class="glass-nav">
+      <span class="nav-title">Action Required</span>
+    </nav>
+
+    <!-- Failure action card — slides up via failure-action-reveal animation -->
+    <div class="content-area">
+      <div class="glass-modal failure-action-card" id="failure-action-card">
+
+        <!-- "FAILURE ACTION" label — caption 2, uppercase (styling-spec.md Section 7b) -->
+        <p class="failure-action-label">FAILURE ACTION</p>
+
+        <!-- Role line — footnote size, secondary color (styling-spec.md Section 7b) -->
+        <p class="failure-action-role-line" id="failure-action-role"></p>
+
+        <!-- Channel line — footnote size, secondary color (styling-spec.md Section 7b) -->
+        <p class="failure-action-channel-line" id="failure-action-channel"></p>
+
+        <!-- SAY block — hidden when failureAction.say is null; callout size, italic (styling-spec.md Section 7b) -->
+        <div class="failure-action-say-block" id="failure-action-say-block">
+          <p class="failure-action-say" id="failure-action-say"></p>
+        </div>
+
+        <!-- Response buttons — stacked vertically (styling-spec.md Section 7c) -->
+        <div class="failure-action-buttons">
+          <!-- "Done — action complete" — background: var(--color-audit-resolved) → #34C759 light / #30D158 dark -->
+          <button id="btn-done" class="btn-done">Done — action complete</button>
+          <!-- "Needs Follow-Up" — background: var(--color-audit-flagged) → #FF9500 light / #FF9F0A dark -->
+          <button id="btn-follow-up" class="btn-follow-up">Needs Follow-Up</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div id="audit-summary" class="screen">
+
+    <nav class="glass-nav">
+      <span class="nav-title">Audit Complete</span>
+    </nav>
+
+    <div class="content-area">
+
+      <!-- Summary stats card -->
+      <div class="glass-card audit-summary-card">
+
+        <p class="audit-summary-heading">Summary</p>
+
+        <!-- Total items -->
+        <div class="audit-stat-row">
+          <span class="audit-stat-label">Total Items</span>
+          <span class="audit-stat-value" id="summary-total">0</span>
+        </div>
+
+        <!-- Items passed (YES responses) — color: var(--color-audit-yes) -->
+        <div class="audit-stat-row">
+          <span class="audit-stat-label">Passed</span>
+          <span class="audit-stat-value audit-stat-passed" id="summary-passed">0</span>
+        </div>
+
+        <!-- Items resolved (Done responses after NO) — color: var(--color-audit-resolved) -->
+        <div class="audit-stat-row">
+          <span class="audit-stat-label">Resolved</span>
+          <span class="audit-stat-value audit-stat-resolved" id="summary-resolved">0</span>
+        </div>
+
+        <!-- Items flagged (Needs Follow-Up responses) — color: var(--color-audit-flagged) -->
+        <div class="audit-stat-row">
+          <span class="audit-stat-label">Needs Follow-Up</span>
+          <span class="audit-stat-value audit-stat-flagged" id="summary-flagged">0</span>
+        </div>
+
+      </div>
+
+      <!-- Generate Task List button — ALWAYS present (blueprint.md Section 1: "button is always present regardless of pass/fail count") -->
+      <button id="btn-generate-tasks" class="btn-primary btn-generate-tasks">
+        Generate Task List
+      </button>
+
+    </div>
+
+  </div>
+  <div id="task-list" class="screen">
+
+    <!-- Nav bar with Share button in top-right (styling-spec.md Section 7i) -->
+    <nav class="glass-nav task-list-nav">
+      <span class="nav-title">Task List</span>
+      <!-- ShareButton: icon + label, color var(--color-accent), min 44×44px tap target -->
+      <button id="btn-share-tasks" class="btn-share" aria-label="Share task list">
+        <!-- Heroicons "share" icon — references SVG sprite symbol defined in Task 07 -->
+        <svg aria-hidden="true" width="24" height="24">
+          <use href="#icon-share" />
+        </svg>
+        <span class="btn-share-label">Share</span>
+      </button>
+    </nav>
+
+    <!-- Scrollable task list container — populated by renderTaskList() -->
+    <div class="content-area">
+      <div id="task-list-container" class="task-list-container">
+        <!-- Task groups injected here by renderTaskList() in app.js:
+             Structure per group:
+               <div class="team-group">
+                 <div class="team-header">LOT TEAM</div>
+                 <div class="task-card glass-card [task-card--follow-up]" style="--card-index: N;">
+                   ... task card fields ...
+                 </div>
+               </div>
+        -->
+      </div>
+    </div>
+
+  </div>
+  <div class="screen" id="pdi-compliance-view">
+  <nav class="glass-nav">
+    <button id="btn-pdi-back" aria-label="Back" style="background:none; border:none; color:var(--color-accent); font-size:var(--text-body-size); cursor:pointer; display:flex; align-items:center; gap:var(--space-1); min-width:44px; min-height:44px;">
+      <svg aria-hidden="true" width="24" height="24"><use href="#icon-arrow-left" /></svg>
+      Back
+    </button>
+    <h1 style="font-size:var(--text-headline-size); font-weight:var(--text-headline-weight); color:var(--color-label-primary); flex:1; text-align:center; letter-spacing:var(--text-headline-ls);">PDI Compliance</h1>
+    <span style="min-width:44px;"></span><!-- spacer -->
+  </nav>
+
+  <div class="content-area">
+
+    <div class="glass-card" style="padding:var(--card-padding); margin-bottom:var(--card-gap);">
+      <label style="display:block; font-size:var(--text-caption-2-size); text-transform:uppercase; letter-spacing:var(--text-caption-2-ls); color:var(--color-label-secondary); margin-bottom:var(--space-2);">Vehicle VIN</label>
+      <input
+        type="text"
+        id="pdi-vin-input"
+        maxlength="17"
+        placeholder="17-character VIN"
+        autocomplete="off"
+        style="display:block; width:100%; height:44px; border:1px solid var(--color-separator); border-radius:var(--radius-medium); padding:0 var(--space-4); font-size:var(--text-body-size); color:var(--color-label-primary); background:var(--color-bg-secondary); box-sizing:border-box; outline:none; font-family:var(--font-family);"
+      />
+    </div>
+
+    <div class="glass-card" style="padding:var(--card-padding); margin-bottom:var(--card-gap);">
+      <label style="display:block; font-size:var(--text-caption-2-size); text-transform:uppercase; letter-spacing:var(--text-caption-2-ls); color:var(--color-label-secondary); margin-bottom:var(--space-2);">Vehicle Arrival Date</label>
+      <input
+        type="date"
+        id="pdi-arrival-date"
+        style="display:block; width:100%; height:44px; border:1px solid var(--color-separator); border-radius:var(--radius-medium); padding:0 var(--space-4); font-size:var(--text-body-size); color:var(--color-label-primary); background:var(--color-bg-secondary); box-sizing:border-box; outline:none; font-family:var(--font-family);"
+      />
+    </div>
+
+    <button id="btn-pdi-calculate" style="display:block; width:100%; height:50px; border:none; border-radius:var(--radius-medium); background:var(--color-accent); color:#FFFFFF; font-size:var(--text-callout-size); font-weight:600; cursor:pointer; margin-bottom:var(--card-gap);">Calculate Status</button>
+
+    <div id="pdi-error-msg" style="display:none; color:var(--color-destructive); font-size:var(--text-footnote-size); margin-bottom:var(--space-3);"></div>
+
+    <!-- Status display block — hidden until "Calculate Status" is tapped -->
+    <div id="pdi-status-block" style="display:none;">
+      <div class="glass-card" style="padding:var(--card-padding); margin-bottom:var(--card-gap);">
+        <div style="font-size:var(--text-caption-2-size); text-transform:uppercase; letter-spacing:var(--text-caption-2-ls); color:var(--color-label-secondary); margin-bottom:var(--space-2);">Compliance Status</div>
+        <div id="pdi-status-label" style="font-size:var(--text-title-2-size); font-weight:var(--text-title-2-weight); letter-spacing:var(--text-title-2-ls);"></div>
+        <div id="pdi-days-elapsed" style="font-size:var(--text-footnote-size); color:var(--color-label-secondary); margin-top:var(--space-2);"></div>
+      </div>
+
+      <button id="btn-pdi-begin-checklist" style="display:block; width:100%; height:50px; border:none; border-radius:var(--radius-medium); background:var(--color-accent); color:#FFFFFF; font-size:var(--text-callout-size); font-weight:600; cursor:pointer;">Begin PDI Checklist</button>
+    </div>
+
+  </div>
+</div>
 
   <!-- RESUME MODAL — fixed overlay; not a .screen; managed by resumeCheck() in app.js -->
   <!-- display:none by default; set to display:flex by resumeCheck() when session found -->
-  <div id="resume-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:200; align-items:flex-end; justify-content:center; background:rgba(0,0,0,0.4);">
-    <div class="glass-modal" style="width:100%; padding:var(--space-6); padding-bottom:calc(var(--space-6) + env(safe-area-inset-bottom));">
-      <h2 style="font-size:var(--text-title-2-size); font-weight:var(--text-title-2-weight); color:var(--color-label-primary); margin:0 0 var(--space-2) 0;">Audit in Progress</h2>
-      <p style="font-size:var(--text-body-size); line-height:var(--text-body-lh); color:var(--color-label-secondary); margin:0 0 var(--space-6) 0;">You have an audit in progress. Resume where you left off?</p>
-      <button id="btn-resume" class="btn-done" style="width:100%; margin-bottom:var(--space-3);">Resume</button>
-      <button id="btn-start-fresh" class="btn-follow-up" style="width:100%;">Start Fresh</button>
+  <div id="resume-modal" style="display:none; position:fixed; inset:0; z-index:1000; align-items:center; justify-content:center; background:rgba(0,0,0,0.5);">
+    <div class="glass-modal" style="max-width:360px; width:calc(100% - 32px); padding:var(--space-6); border-radius:var(--radius-large);">
+      <h2 style="font-size:var(--text-title-2-size); font-weight:var(--text-title-2-weight); color:var(--color-label-primary); margin-bottom:var(--space-3);">Audit in Progress</h2>
+      <p style="font-size:var(--text-body-size); color:var(--color-label-secondary); margin-bottom:var(--space-6);">You have an audit in progress. Resume where you left off?</p>
+      <button id="btn-resume" style="display:block; width:100%; height:50px; border:none; border-radius:var(--radius-medium); background:var(--color-accent); color:#FFFFFF; font-size:var(--text-callout-size); font-weight:600; margin-bottom:var(--space-3); cursor:pointer;">Resume</button>
+      <button id="btn-start-fresh" style="display:block; width:100%; height:50px; border:none; border-radius:var(--radius-medium); background:var(--color-fill); color:var(--color-label-primary); font-size:var(--text-callout-size); font-weight:600; cursor:pointer;">Start Fresh</button>
     </div>
   </div>
 
