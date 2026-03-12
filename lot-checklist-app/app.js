@@ -42,6 +42,12 @@ function showScreen(screenId) {
 // Called after every response is recorded.
 // ------------------------------------------------------------
 function persistState() {
+  // Only persist when an audit is actively in progress.
+  // Prevents false resume modal on next load when there is no real session to resume,
+  // and ensures localStorage is clear after "Start Fresh" resets auditType to null.
+  if (!appState.auditType) {
+    return;
+  }
   localStorage.setItem(
     'lot-checklist-app-session-in-progress',
     JSON.stringify(appState)
@@ -318,7 +324,8 @@ function renderFailureAction(index) {
 }
 
 // "Done — action complete" button handler
-// Records response 'done', persists state, advances checklist, returns to checklist-view
+// Records response 'done', persists state, advances checklist.
+// advanceChecklist() handles all navigation internally (checklist-view or audit-summary).
 document.getElementById('btn-done').addEventListener('click', function () {
   var item = appState.checklist[appState.currentItemIndex];
   appState.responses.push({
@@ -328,11 +335,11 @@ document.getElementById('btn-done').addEventListener('click', function () {
   });
   persistState();      // REQUIRED — must be called after every response push (Section 4.3)
   advanceChecklist();  // increment currentItemIndex; navigate if all items answered
-  showScreen('checklist-view');
 });
 
 // "Needs Follow-Up" button handler
-// Records response 'needs-followup', persists state, advances checklist, returns to checklist-view
+// Records response 'needs-followup', persists state, advances checklist.
+// advanceChecklist() handles all navigation internally (checklist-view or audit-summary).
 document.getElementById('btn-follow-up').addEventListener('click', function () {
   var item = appState.checklist[appState.currentItemIndex];
   appState.responses.push({
@@ -342,7 +349,6 @@ document.getElementById('btn-follow-up').addEventListener('click', function () {
   });
   persistState();      // REQUIRED — must be called after every response push (Section 4.3)
   advanceChecklist();  // increment currentItemIndex; navigate if all items answered
-  showScreen('checklist-view');
 });
 
 // NOTE: There is no back button handler for failure-action-view.
@@ -532,8 +538,8 @@ function renderTaskList() {
         var vehicleRow = document.createElement('div');
         vehicleRow.className = 'task-field-row';
         vehicleRow.innerHTML =
-          '<span class="task-field-label">VEHICLE</span>' +
-          '<span class="task-field-vehicle">' + escapeHtml(task.vehicleVIN) + '</span>';
+          '<span class="task-card__field-label">VEHICLE</span>' +
+          '<span class="task-card__field-value--vehicle">' + escapeHtml(task.vehicleVIN) + '</span>';
         cardEl.appendChild(vehicleRow);
       }
 
@@ -542,8 +548,8 @@ function renderTaskList() {
         var zoneRow = document.createElement('div');
         zoneRow.className = 'task-field-row';
         zoneRow.innerHTML =
-          '<span class="task-field-label">ZONE</span>' +
-          '<span class="task-field-item">' + escapeHtml(task.zone) + '</span>';
+          '<span class="task-card__field-label">ZONE</span>' +
+          '<span class="task-card__field-value--item">' + escapeHtml(task.zone) + '</span>';
         cardEl.appendChild(zoneRow);
       }
 
@@ -551,8 +557,8 @@ function renderTaskList() {
       var itemRow = document.createElement('div');
       itemRow.className = 'task-field-row';
       itemRow.innerHTML =
-        '<span class="task-field-label">ITEM</span>' +
-        '<span class="task-field-item">' + escapeHtml(task.itemText) + '</span>';
+        '<span class="task-card__field-label">ITEM</span>' +
+        '<span class="task-card__field-value--item">' + escapeHtml(task.itemText) + '</span>';
       cardEl.appendChild(itemRow);
 
       // ACTION field — failure action role + channel + say (verbatim — Constraint 7)
@@ -563,17 +569,17 @@ function renderTaskList() {
       var actionRow = document.createElement('div');
       actionRow.className = 'task-field-row';
       actionRow.innerHTML =
-        '<span class="task-field-label">ACTION</span>' +
-        '<span class="task-field-action">' + escapeHtml(actionText) + '</span>';
+        '<span class="task-card__field-label">ACTION</span>' +
+        '<span class="task-card__field-value--action">' + escapeHtml(actionText) + '</span>';
       cardEl.appendChild(actionRow);
 
       // STATUS badge — FOLLOW-UP (orange) or Resolved (green)
       var statusRow = document.createElement('div');
       statusRow.className = 'task-field-row';
-      var badgeClass = isFollowUp ? 'task-status-badge follow-up' : 'task-status-badge resolved';
+      var badgeClass = isFollowUp ? 'task-card__status-badge task-card__status-badge--followup' : 'task-card__status-badge task-card__status-badge--resolved';
       var badgeLabel = isFollowUp ? 'FOLLOW-UP' : 'Resolved';
       statusRow.innerHTML =
-        '<span class="task-field-label">STATUS</span>' +
+        '<span class="task-card__field-label">STATUS</span>' +
         '<span class="' + badgeClass + '">' + badgeLabel + '</span>';
       cardEl.appendChild(statusRow);
 
@@ -963,10 +969,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Compute days elapsed
+    // Parse date parts manually to create local-time date (avoids UTC off-by-one for
+    // users in UTC-negative timezones where new Date("YYYY-MM-DD") creates UTC midnight
+    // which becomes the previous local day before setHours resets it).
     var today = new Date();
     today.setHours(0, 0, 0, 0);
-    var arrivalDate = new Date(arrivalDateInput.value);
-    arrivalDate.setHours(0, 0, 0, 0);
+    var dateParts = arrivalDateInput.value.split('-');
+    var arrivalDate = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]));
     var daysElapsed = Math.floor((today - arrivalDate) / 86400000);
 
     if (daysElapsed < 0) {
